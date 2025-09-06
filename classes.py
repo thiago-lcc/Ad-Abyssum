@@ -18,7 +18,7 @@ class Player(sprite.Sprite):
 
   
 
-  def move_right(self, dt) -> None:
+  def move_right(self, dt: float) -> None:
     
     
     self.x += self.speed * dt
@@ -27,7 +27,7 @@ class Player(sprite.Sprite):
 
 
   
-  def move_left(self, dt) -> None:
+  def move_left(self, dt: float) -> None:
     
 
     self.x -= self.speed * dt

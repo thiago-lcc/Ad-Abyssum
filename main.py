@@ -15,7 +15,7 @@ player.set_position(400, 500)
 
 
 
-def get_input(dt) -> None:
+def get_input(dt: int) -> None:
    
 
   kb = win.get_keyboard()

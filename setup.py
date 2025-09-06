@@ -1,11 +1,12 @@
 import pygame
 import math
-
+from classes import Player
+from pplay.window import Window
 
 darkness = pygame.Surface((3000, 3000), pygame.SRCALPHA)
 
 
-def darkness_setup(win, player) -> None:
+def darkness_setup(win: Window, player: Player) -> None:
   
 
   # where the light "spawns" from
