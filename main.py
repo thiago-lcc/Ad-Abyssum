@@ -8,14 +8,14 @@ win = window.Window(0,0)
 win.set_title("Ad Abyssum")
 win.set_fullscreen()
 
-
+ground = 600
 
 player = Player("Capturar.PNG")
 player.set_position(400, 500)
 
 
 
-def get_input(dt: int) -> None:
+def get_input(dt: float) -> None:
    
 
   kb = win.get_keyboard()
@@ -39,10 +39,15 @@ def get_input(dt: int) -> None:
   if kb.key_pressed("D"):
 
     player.move_right(dt)
+
   
+  if kb.key_pressed("SPACE") and player.is_grounded:
+
+    player.jump(dt)
 
 
-      
+
+
 
 
 
@@ -55,6 +60,9 @@ def main() -> None:
     dt = win.delta_time() #time passed between current and last frame
     get_input(dt)
 
+
+    player.fall(dt)
+    player.check_if_grounded(ground)
 
     win.set_background_color((100,0,0))
 
