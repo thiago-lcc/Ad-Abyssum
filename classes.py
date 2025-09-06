@@ -19,7 +19,8 @@ class Player(sprite.Sprite):
   
 
   def move_right(self, dt) -> None:
-
+    
+    
     self.x += self.speed * dt
 
     self.last_looked = 0.0 #right
@@ -27,6 +28,7 @@ class Player(sprite.Sprite):
 
   
   def move_left(self, dt) -> None:
+    
 
     self.x -= self.speed * dt
 

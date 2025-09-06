@@ -17,13 +17,32 @@ player.set_position(400, 500)
 
 def get_input(dt) -> None:
    
+
   kb = win.get_keyboard()
 
+
+  if kb.key_pressed("S"):
+
+    player.last_looked = math.pi / 2
+  
+  
+  if kb.key_pressed("W"):
+
+    player.last_looked = 3 * math.pi / 2
+  
+  
   if kb.key_pressed("A"):
-        player.move_left(dt)
+
+    player.move_left(dt)
+
 
   if kb.key_pressed("D"):
-        player.move_right(dt)
+
+    player.move_right(dt)
+  
+
+
+      
 
 
 
