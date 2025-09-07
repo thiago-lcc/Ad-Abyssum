@@ -18,7 +18,7 @@ background = gameimage.GameImage("assets/cave_bg_tiled.png")
 ground = 600
 
 
-player = Player("assets/player_sprite1.png")
+player = Player("assets/player_spritesheet_2frames.png", 2)
 player.set_position(400, 500)
 
 
@@ -41,7 +41,6 @@ def main() -> None:
     environment_setup(win, player, background)
 
 
-    player.set_curr_frame(0)
     player.draw()
 
 
