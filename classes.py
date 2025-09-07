@@ -16,7 +16,8 @@ class Entity(sprite.Sprite):
     self.is_grounded = True
 
     self.vel_y = 0
-  
+
+
 
   def fall(self, dt: float) -> None:
 
