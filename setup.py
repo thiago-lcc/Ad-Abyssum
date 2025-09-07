@@ -37,3 +37,40 @@ def darkness_setup(win: Window, player: Player) -> None:
 
 
   win.get_screen().blit(darkness, (0, 0))# draws all
+
+
+
+
+def get_input(dt: float, win: Window, player: Player) -> None:
+   
+
+  kb = win.get_keyboard()
+
+
+  if kb.key_pressed("S"):
+
+    player.last_looked = math.pi / 2
+  
+  
+  if kb.key_pressed("W"):
+
+    player.last_looked = 3 * math.pi / 2
+  
+  
+  if kb.key_pressed("A"):
+
+    player.move_left(dt)
+
+
+  if kb.key_pressed("D"):
+
+    player.move_right(dt)
+
+  
+  if kb.key_pressed("SPACE") and player.is_grounded:
+
+    player.jump(dt)
+
+
+
+

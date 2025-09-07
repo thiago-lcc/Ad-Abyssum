@@ -5,7 +5,46 @@ gravity = 600 #pix/s^2
 
 
 
-class Player(sprite.Sprite):
+class Entity(sprite.Sprite):
+
+  def __init__(self, image_file, frames=1):
+        
+
+    super(Entity, self).__init__(image_file, frames)
+
+
+    self.is_grounded = True
+
+    self.vel_y = 0
+  
+
+  def fall(self, dt: float) -> None:
+
+    if not self.is_grounded:
+
+      self.vel_y += gravity * dt
+
+      self.y += self.vel_y * dt
+
+
+
+  def check_if_grounded(self, ground) -> None:
+
+    if self.y >= ground:
+
+      self.is_grounded = True
+      self.vel_y = 0
+
+    else:
+
+      self.is_grounded = False
+
+
+
+
+
+
+class Player(Entity):
 
   def __init__(self, image_file, frames=1):
         
@@ -19,11 +58,8 @@ class Player(sprite.Sprite):
 
     self.last_looked = 0.0 #right
 
-    self.is_grounded = True
-
     self.jump_strength = -300
 
-    self.vel_y = 0
   
 
   def move_right(self, dt: float) -> None:
@@ -51,26 +87,5 @@ class Player(sprite.Sprite):
     self.is_grounded = False
 
 
-  
-  def fall(self, dt: float) -> None:
-
-    if not self.is_grounded:
-
-      self.vel_y += gravity * dt
-
-      self.y += self.vel_y * dt
-
-
-
-  def check_if_grounded(self, ground) -> None:
-
-    if self.y >= ground:
-
-      self.is_grounded = True
-      self.vel_y = 0
-
-    else:
-
-      self.is_grounded = False
 
 
