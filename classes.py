@@ -1,7 +1,7 @@
 from pplay import sprite
 from math import pi
 
-gravity = 600 #pix/s^2
+gravity = 1000 #pix/s^2
 
 
 
@@ -59,7 +59,7 @@ class Player(Entity):
 
     self.last_looked = 0.0 #right
 
-    self.jump_strength = -300
+    self.jump_strength = -400
 
   
 

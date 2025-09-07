@@ -12,13 +12,13 @@ win.set_title("Ad Abyssum")
 win.set_fullscreen()
 
 
-background = gameimage.GameImage("cave_bg_tiled.png")
+background = gameimage.GameImage("assets/cave_bg_tiled.png")
 
 
 ground = 600
 
 
-player = Player("sprite_1.png")
+player = Player("assets/player_sprite1.png")
 player.set_position(400, 500)
 
 
