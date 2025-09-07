@@ -19,7 +19,7 @@ def load_flashlight(player: Player) -> None:
 
 
     angle = player.last_looked  # direction the flashlight is pointing. Ex:. 0 = right, pi/2 = up, etc.
-    beam_len = 320
+    beam_len = 280
     beam_half_angle = math.radians(30)  # angle from the light coming out of the flashlight
 
 
@@ -34,7 +34,7 @@ def load_flashlight(player: Player) -> None:
 
 
 
-    pygame.draw.circle(darkness, (0, 0, 0, 0), (px, py), 50) # creates light circle
+    pygame.draw.circle(darkness, (0, 0, 0, 170), (px, py), 50) # creates light circle
     pygame.draw.polygon(darkness, (0, 0, 0, 0), [p1, p2, p3]) # creates light beam
 
 
@@ -55,17 +55,13 @@ def load_background(win: Window, background: GameImage) -> None:
 
 
 
-def environment_setup(win: Window, player: Player, background: GameImage) -> None:
+def darkness_setup(win: Window, player: Player) -> None:
   
 
 
     darkness.fill((0, 0, 0, 254)) # creates the darkness
 
-
     load_flashlight(player)
-
-    load_background(win, background)
-
 
     win.get_screen().blit(darkness, (0, 0))# draws all
 

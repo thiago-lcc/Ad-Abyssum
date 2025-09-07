@@ -44,7 +44,6 @@ class Entity(sprite.Sprite):
 
 
 
-
 class Player(Entity):
 
   def __init__(self, image_file, frames=1):
@@ -59,6 +58,8 @@ class Player(Entity):
 
     self.last_looked = 0.0 #right
 
+    self.last_looked_x = 'right'
+
     self.jump_strength = -400
 
   
@@ -70,6 +71,8 @@ class Player(Entity):
 
     self.last_looked = 0.0 #right
 
+    self.last_looked_x = 'right'
+
 
   
   def move_left(self, dt: float) -> None:
@@ -79,6 +82,8 @@ class Player(Entity):
 
     self.last_looked = pi #left
 
+    self.last_looked_x = 'left'
+
 
 
   def jump(self, dt: float) -> None:
@@ -86,6 +91,54 @@ class Player(Entity):
 
     self.vel_y = self.jump_strength
     self.is_grounded = False
+
+
+
+
+
+
+
+class Enemy(Entity):
+
+  def __init__(self, image_file, frames=1):
+
+
+    super(Enemy, self).__init__(image_file, frames)
+
+
+    self.speed = 100
+
+    self.direction = 1 #1 == right, -1 == left
+
+    self.detection_radius = 400
+
+  
+  def update(self, dt: float, player: Player) -> None:
+
+
+    if self.x + self.width/2 > player.x + player.width/2:
+
+      self.direction = -1
+    
+    elif self.x + self.width/2 < player.x + player.width/2:
+
+      self.direction = 1
+    
+
+
+    if self.detection_radius >= abs(self.x - player.x) or self.detection_radius >= abs(self.y - player.y):
+
+      self.move_x(self.speed * self.direction * dt)
+
+
+
+
+
+
+
+
+
+
 
 
 
