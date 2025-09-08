@@ -2,7 +2,7 @@ from pplay import window, sprite, gameimage
 import pygame
 import math
 from classes import Player, Enemy
-from setup import darkness_setup, get_input, load_background, load_flashlight, invisible
+from setup import darkness_setup, get_input, load_background, load_flashlight
 
 
 
@@ -29,10 +29,6 @@ enemy.set_position(600, 500)
 
 def main() -> None:
   
-  visible = True
-  invisible_timer = 0.0
-  duration = 5.0
-  
   while True:
 
 
@@ -45,6 +41,7 @@ def main() -> None:
     player.fall(dt)
     player.check_if_grounded(ground)
 
+
     enemy.fall(dt)
     enemy.check_if_grounded(ground)
 
@@ -52,23 +49,21 @@ def main() -> None:
     load_background(win, background)
 
 
-    enemy.draw()
-    enemy.update(dt, player)
+
+    Enemy.draw_all()
+    Enemy.update_all(dt, player)
+
+
 
     darkness_setup(win, player)
     
-    visible, invisible_timer = invisible(win, visible, invisible_timer, duration) #player becomes invisible
+
+
+    player.check_invisibility(dt)
     
-    
-    if invisible_timer > 0:
-        
-      invisible_timer -= dt
-    
-    else:
-        
-      visible = True
-    
-    if visible:
+
+    if player.is_visible:
+
       player.draw()
     
 
