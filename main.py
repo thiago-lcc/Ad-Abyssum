@@ -2,7 +2,7 @@ from pplay import window, sprite, gameimage
 import pygame
 import math
 from classes import Player, Enemy
-from setup import darkness_setup, get_input, load_background, load_flashlight
+from setup import darkness_setup, get_input, load_background, load_flashlight, invisible
 
 
 
@@ -13,6 +13,7 @@ win.set_fullscreen()
 
 
 background = gameimage.GameImage("assets/cave_bg_tiled.png")
+
 
 
 ground = 600
@@ -27,14 +28,18 @@ enemy.set_position(600, 500)
 
 
 def main() -> None:
-
+  
+  visible = True
+  invisible_timer = 0.0
+  duration = 5.0
+  
   while True:
 
 
     dt = win.delta_time() #time passed between current and last frame
     get_input(dt, win, player)
 
-
+    
 
 
     player.fall(dt)
@@ -51,8 +56,20 @@ def main() -> None:
     enemy.update(dt, player)
 
     darkness_setup(win, player)
-
-    player.draw()
+    
+    visible, invisible_timer = invisible(win, visible, invisible_timer, duration) #player becomes invisible
+    
+    
+    if invisible_timer > 0:
+        
+      invisible_timer -= dt
+    
+    else:
+        
+      visible = True
+    
+    if visible:
+      player.draw()
     
 
 

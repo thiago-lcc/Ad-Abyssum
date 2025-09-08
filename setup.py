@@ -101,5 +101,13 @@ def get_input(dt: float, win: Window, player: Player) -> None:
     player.jump(dt)
 
 
-
+def invisible(win: Window, visible: bool, timer: float, time: float) -> tuple [bool, float]:
+    
+    kb = win.get_keyboard()
+    
+    if kb.key_pressed("E") and timer <= 0:
+          visible = not visible
+          timer = time
+    
+    return visible, timer
 
