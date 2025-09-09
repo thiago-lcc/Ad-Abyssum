@@ -77,23 +77,39 @@ def get_input(dt: float, win: Window, player: Player) -> None:
   if kb.key_pressed("S"):
 
     player.last_looked = math.pi / 2
+
+    if player.last_looked_x == 'right':
+       
+       player.set_curr_frame(4)
+    
+    if player.last_looked_x == 'left':
+       
+       player.set_curr_frame(5)
   
   
   if kb.key_pressed("W"):
 
     player.last_looked = 3 * math.pi / 2
+
+    if player.last_looked_x == 'right':
+       
+       player.set_curr_frame(3)
+    
+    if player.last_looked_x == 'left':
+       
+       player.set_curr_frame(2)
   
   
   if kb.key_pressed("A"):
 
     player.move_left(dt)
-    player.set_curr_frame(1)
+    player.set_curr_frame(0)
 
 
   if kb.key_pressed("D"):
 
     player.move_right(dt)
-    player.set_curr_frame(0)
+    player.set_curr_frame(1)
 
   
   if kb.key_pressed("SPACE") and player.is_grounded:

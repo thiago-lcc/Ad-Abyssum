@@ -19,8 +19,10 @@ background = gameimage.GameImage("assets/cave_bg_tiled.png")
 ground = 600
 
 
-player = Player("assets/player_spritesheet_2frames.png", 2)
+player = Player("assets/player_sprites.png", 6)
 player.set_position(400, 500)
+player.set_curr_frame(1)
+
 
 enemy = Enemy("assets/enemy.png")
 enemy.set_position(600, 500)
