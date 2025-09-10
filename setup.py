@@ -87,6 +87,7 @@ def get_input(dt: float, win: Window, player: Player) -> None:
        player.set_curr_frame(5)
   
   
+
   if kb.key_pressed("W"):
 
     player.last_looked = 3 * math.pi / 2
@@ -100,10 +101,12 @@ def get_input(dt: float, win: Window, player: Player) -> None:
        player.set_curr_frame(2)
   
   
+
   if kb.key_pressed("A"):
 
     player.move_left(dt)
     player.set_curr_frame(0)
+
 
 
   if kb.key_pressed("D"):
@@ -112,9 +115,11 @@ def get_input(dt: float, win: Window, player: Player) -> None:
     player.set_curr_frame(1)
 
   
+
   if kb.key_pressed("SPACE") and player.is_grounded:
 
     player.jump(dt)
+
 
 
   if kb.key_pressed("E") and player.is_visible:
@@ -122,4 +127,10 @@ def get_input(dt: float, win: Window, player: Player) -> None:
      player.is_visible = False
 
      player.invisibilty_timer = 5
+  
+
+
+  if kb.key_pressed("ESC"):
+     
+     win.close()
 
