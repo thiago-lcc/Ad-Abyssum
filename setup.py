@@ -35,7 +35,21 @@ def load_flashlight(player: Player) -> None:
 
 
     pygame.draw.circle(darkness, (0, 0, 0, 170), (px, py), 50) # creates light circle
-    pygame.draw.polygon(darkness, (0, 0, 0, 0), [p1, p2, p3]) # creates light beam
+    pygame.draw.polygon(darkness, (0, 0, 0, 60), [p1, p2, p3]) # creates light beam
+
+
+
+
+
+def load_torch(torch: Torch):
+   
+
+   tx = torch.x + torch.width/2
+   ty = torch.y + torch.height/2
+
+   pygame.draw.circle(darkness, (255, 191, 0, 40), (tx, ty), 110) # creates yellow light circle
+
+
 
 
 
@@ -55,13 +69,15 @@ def load_background(win: Window, background: GameImage) -> None:
 
 
 
-def darkness_setup(win: Window, player: Player) -> None:
+def darkness_setup(win: Window, player: Player, torch: Torch) -> None:
   
 
 
     darkness.fill((0, 0, 0, 254)) # creates the darkness
 
     load_flashlight(player)
+
+    if torch.was_thrown: load_torch(torch)
 
     win.get_screen().blit(darkness, (0, 0))# draws all
 

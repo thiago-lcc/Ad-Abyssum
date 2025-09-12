@@ -47,7 +47,7 @@ class Entity(sprite.Sprite):
 
 
 
-class Torch(sprite.Sprite):
+class Torch(Entity):
 
   def __init__(self, image_file, frames=1):
 
@@ -92,15 +92,10 @@ class Torch(sprite.Sprite):
     
     if self.hit_target:
 
-      self.speed_y += gravity
+      self.check_if_grounded(ground)
+      self.fall(dt)
 
     
-    if self.y >= ground - self.height:
-
-      self.y = ground - self.height
-      self.speed_y = 0
-
-
     
     self.move_x(self.speed_x * dt)
     self.move_y(self.speed_y * dt)

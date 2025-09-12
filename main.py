@@ -28,7 +28,7 @@ enemy = Enemy("assets/enemy.png")
 enemy.set_position(600, 500)
 
 
-torch = Torch("assets/enemy.png")
+torch = Torch("assets/torch.png")
 torch.set_position(player.x, player.y)
 
 
@@ -59,7 +59,7 @@ def main() -> None:
 
 
 
-    darkness_setup(win, player)
+    darkness_setup(win, player, torch)
     
 
 
@@ -71,16 +71,19 @@ def main() -> None:
       player.draw()
     
 
+
     if torch.was_thrown:
 
       torch.draw()
     
-    if torch.was_thrown and torch.hit_target and torch.x == player.x and torch.y == player.y:
+    if torch.was_thrown and torch.hit_target and torch.collided(player):
 
       torch.was_thrown = False
       torch.hit_target = False
     
     torch.update(dt, win)
+
+
 
 
     win.update()
