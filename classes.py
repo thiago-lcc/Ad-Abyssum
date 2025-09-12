@@ -1,6 +1,8 @@
-from pplay import sprite
+from pplay import sprite, window
 from math import pi
 
+
+ground = 600
 gravity = 1000 #pix/s^2
 
 
@@ -39,6 +41,69 @@ class Entity(sprite.Sprite):
     else:
 
       self.is_grounded = False
+
+
+
+
+
+
+class Torch(sprite.Sprite):
+
+  def __init__(self, image_file, frames=1):
+
+    super(Torch, self).__init__(image_file, frames)
+
+
+    self.was_thrown = False
+    self.hit_target = False
+    self.speed_x = 0
+    self.speed_y = 0
+    self.direction = 'right'
+  
+
+
+  def check_hits(self, win: window.Window) -> None:
+
+    for enemy in Enemy._instances:
+
+      if self.collided(enemy):
+
+        self.speed_x = 0
+        self.hit_target = True
+      
+    if self.x >= win.width or self.x <= 0:
+
+      self.speed_x = 0
+      self.hit_target = True
+
+  
+  def update(self, dt: float, win: window.Window) -> None:
+
+    self.check_hits(win)
+
+    if self.was_thrown and not self.hit_target:
+
+      self.speed_x = 400
+
+      if self.direction == 'left':
+        self.speed_x *= -1
+
+
+    
+    if self.hit_target:
+
+      self.speed_y += gravity
+
+    
+    if self.y >= ground - self.height:
+
+      self.y = ground - self.height
+      self.speed_y = 0
+
+
+    
+    self.move_x(self.speed_x * dt)
+    self.move_y(self.speed_y * dt)
 
 
 
@@ -111,6 +176,13 @@ class Player(Entity):
       self.invisibilty_timer = 0
 
       self.is_visible = True
+  
+
+  def throw_torch(self, torch: Torch):
+
+    torch.was_thrown = True
+    torch.set_position(self.x, self.y)
+    torch.direction = self.last_looked_x
 
 
 
@@ -162,19 +234,7 @@ class Enemy(Entity):
     for object in cls._instances:
 
       object.update(dt, player)
-
-
-
-  @classmethod
-  def draw_all(cls):
-
-    for object in cls._instances:
-
       object.draw()
-    
-
-
-
 
 
 

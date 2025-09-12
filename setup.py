@@ -1,6 +1,6 @@
 import pygame
 import math
-from classes import Player
+from classes import Player, Torch
 from pplay.window import Window
 from pplay.gameimage import GameImage
 
@@ -68,10 +68,11 @@ def darkness_setup(win: Window, player: Player) -> None:
 
 
 
-def get_input(dt: float, win: Window, player: Player) -> None:
+def get_input(dt: float, win: Window, player: Player, torch: Torch) -> None:
    
 
   kb = win.get_keyboard()
+  ms = win.get_mouse()
 
 
   if kb.key_pressed("S"):
@@ -123,3 +124,8 @@ def get_input(dt: float, win: Window, player: Player) -> None:
 
      player.invisibilty_timer = 5
 
+
+  if kb.key_pressed("Q") and not torch.was_thrown:
+     
+     player.throw_torch(torch)
+  

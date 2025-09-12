@@ -1,8 +1,8 @@
 from pplay import window, sprite, gameimage
 import pygame
 import math
-from classes import Player, Enemy
-from setup import darkness_setup, get_input, load_background, load_flashlight
+from classes import Player, Enemy, Torch
+from setup import darkness_setup, get_input, load_background
 
 
 
@@ -28,6 +28,10 @@ enemy = Enemy("assets/enemy.png")
 enemy.set_position(600, 500)
 
 
+torch = Torch("assets/enemy.png")
+torch.set_position(player.x, player.y)
+
+
 
 def main() -> None:
   
@@ -35,8 +39,7 @@ def main() -> None:
 
 
     dt = win.delta_time() #time passed between current and last frame
-    get_input(dt, win, player)
-
+    get_input(dt, win, player, torch)
     
 
 
@@ -52,7 +55,6 @@ def main() -> None:
 
 
 
-    Enemy.draw_all()
     Enemy.update_all(dt, player)
 
 
@@ -68,6 +70,17 @@ def main() -> None:
 
       player.draw()
     
+
+    if torch.was_thrown:
+
+      torch.draw()
+    
+    if torch.was_thrown and torch.hit_target and torch.x == player.x and torch.y == player.y:
+
+      torch.was_thrown = False
+      torch.hit_target = False
+    
+    torch.update(dt, win)
 
 
     win.update()
