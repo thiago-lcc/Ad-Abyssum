@@ -22,6 +22,8 @@ ground = 600
 player = Player("assets/player_sprites.png", 6)
 player.set_position(400, 500)
 player.set_curr_frame(1)
+player.heart_sprites[1].set_position(player.heart_sprites[0].width, 0)
+player.heart_sprites[2].set_position(player.heart_sprites[0].width * 2, 0)
 
 
 enemy = Enemy("assets/enemy.png")
@@ -42,15 +44,6 @@ def main() -> None:
     get_input(dt, win, player, torch)
     
 
-
-    player.fall(dt)
-    player.check_if_grounded(ground)
-
-
-    enemy.fall(dt)
-    enemy.check_if_grounded(ground)
-
-
     load_background(win, background)
 
 
@@ -62,26 +55,10 @@ def main() -> None:
     darkness_setup(win, player, torch)
     
 
+    player.update(dt)
 
-    player.check_invisibility(dt)
-    
-
-    if player.is_visible:
-
-      player.draw()
-    
-
-
-    if torch.was_thrown:
-
-      torch.draw()
-    
-    if torch.was_thrown and torch.hit_target and torch.collided(player):
-
-      torch.was_thrown = False
-      torch.hit_target = False
-    
-    torch.update(dt, win)
+ 
+    torch.update(dt, win, player)
 
 
 

@@ -77,7 +77,18 @@ class Torch(Entity):
       self.hit_target = True
 
   
-  def update(self, dt: float, win: window.Window) -> None:
+  def update(self, dt: float, win: window.Window, player) -> None:
+
+    if self.was_thrown:
+
+      self.draw()
+    
+
+    if self.was_thrown and self.hit_target and self.collided(player):
+
+      self.was_thrown = False
+      self.hit_target = False
+
 
     self.check_hits(win)
 
@@ -116,6 +127,8 @@ class Player(Entity):
 
     self.hearts = 3
 
+    self.heart_sprites = [sprite.Sprite("assets/heart_spritesheet.png",2), sprite.Sprite("assets/heart_spritesheet.png",2), sprite.Sprite("assets/heart_spritesheet.png",2)]
+
     self.last_looked = 0.0 #right
 
     self.last_looked_x = 'right'
@@ -126,7 +139,9 @@ class Player(Entity):
 
     self.invisibilty_timer = 0
 
+    self.safety_timer = 0
   
+
 
   def move_right(self, dt: float) -> None:
     
@@ -136,6 +151,7 @@ class Player(Entity):
     self.last_looked = 0.0 #right
 
     self.last_looked_x = 'right'
+
 
 
   
@@ -150,6 +166,7 @@ class Player(Entity):
 
 
 
+
   def jump(self, dt: float) -> None:
 
 
@@ -157,6 +174,7 @@ class Player(Entity):
     self.is_grounded = False
 
   
+
 
   def check_invisibility(self, dt: float) -> None:
 
@@ -173,13 +191,47 @@ class Player(Entity):
       self.is_visible = True
   
 
-  def throw_torch(self, torch: Torch):
+
+
+  def throw_torch(self, torch: Torch) -> None:
 
     torch.was_thrown = True
     torch.set_position(self.x, self.y)
     torch.direction = self.last_looked_x
 
 
+
+  def draw_hearts(self) -> None:
+    
+    for heart in self.heart_sprites:
+
+      heart.draw()
+
+
+
+  def check_safety(self, dt: float) -> None:
+
+    if self.safety_timer > 0:
+
+      self.safety_timer -= dt
+    
+    elif self.safety_timer < 0:
+
+      self.safety_timer = 0
+
+  
+  def update(self, dt: float):
+    
+    self.fall(dt)
+    self.check_if_grounded(ground)
+    self.check_invisibility(dt)
+
+    if self.is_visible:
+
+      self.draw()
+    
+    self.check_safety(dt)
+    self.draw_hearts()
 
 
 
@@ -222,14 +274,26 @@ class Enemy(Entity):
 
       self.move_x(self.speed * self.direction * dt)
 
-  
+
+
+    if self.collided(player) and player.safety_timer == 0:
+      
+      player.hearts -= 1
+
+      player.safety_timer += 3
+
+      player.heart_sprites[player.hearts].set_curr_frame(1) # Changes the sprite of the heart, to simulate losing one life
+
+
   @classmethod
   def update_all(cls, dt, player):
 
-    for object in cls._instances:
+    for enemy in cls._instances:
 
-      object.update(dt, player)
-      object.draw()
+      enemy.update(dt, player)
+      enemy.fall(dt)
+      enemy.check_if_grounded(ground)
+      enemy.draw()
 
 
 
