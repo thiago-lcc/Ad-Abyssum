@@ -27,7 +27,7 @@ player.heart_sprites[2].set_position(player.heart_sprites[0].width * 2, 0)
 
 
 enemy = Enemy("assets/enemy.png")
-enemy.set_position(600, 500)
+enemy.set_position(800, 500)
 
 
 torch = Torch("assets/torch.png")

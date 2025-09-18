@@ -141,7 +141,9 @@ class Player(Entity):
 
     self.safety_timer = 0
   
+    self.knockback_timer = 0
 
+    self.knockback_direction = 0
 
   def move_right(self, dt: float) -> None:
     
@@ -220,6 +222,20 @@ class Player(Entity):
       self.safety_timer = 0
 
   
+  def check_knockback(self, dt: float) -> None:
+
+    while self.knockback_timer > 0:
+
+      self.knockback_timer -= dt
+
+      self.x += self.knockback_direction * 150 * dt
+      self.y -= 120 * dt
+
+    if self.knockback_timer < 0:
+
+      self.knockback_timer = 0
+
+  
   def update(self, dt: float):
     
     self.fall(dt)
@@ -231,6 +247,7 @@ class Player(Entity):
       self.draw()
     
     self.check_safety(dt)
+    self.check_knockback(dt)
     self.draw_hearts()
 
 
@@ -255,6 +272,18 @@ class Enemy(Entity):
     Enemy._instances.append(self) #every object created is added to the _instances list
 
 
+  def hit_player(self, player: Player):
+    
+    player.hearts -= 1
+
+    player.safety_timer += 3
+
+    player.heart_sprites[player.hearts].set_curr_frame(1) # Changes the sprite of the heart, to simulate losing one life
+
+    player.knockback_timer = 0.5
+
+    player.knockback_direction = self.direction
+
 
   
   def update(self, dt: float, player: Player) -> None:
@@ -278,11 +307,8 @@ class Enemy(Entity):
 
     if self.collided(player) and player.safety_timer == 0:
       
-      player.hearts -= 1
+      self.hit_player(player)
 
-      player.safety_timer += 3
-
-      player.heart_sprites[player.hearts].set_curr_frame(1) # Changes the sprite of the heart, to simulate losing one life
 
 
   @classmethod

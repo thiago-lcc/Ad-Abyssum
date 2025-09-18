@@ -90,61 +90,68 @@ def get_input(dt: float, win: Window, player: Player, torch: Torch) -> None:
   kb = win.get_keyboard()
   ms = win.get_mouse()
 
+  if player.hearts > 0 and player.knockback_timer == 0:
 
-  if kb.key_pressed("S"):
+    if kb.key_pressed("S"):
 
-    player.last_looked = math.pi / 2
+      player.last_looked = math.pi / 2
 
-    if player.last_looked_x == 'right':
-       
-       player.set_curr_frame(4)
+      if player.last_looked_x == 'right':
+        
+        player.set_curr_frame(4)
+      
+      if player.last_looked_x == 'left':
+        
+        player.set_curr_frame(5)
     
-    if player.last_looked_x == 'left':
-       
-       player.set_curr_frame(5)
-  
-  
-
-  if kb.key_pressed("W"):
-
-    player.last_looked = 3 * math.pi / 2
-
-    if player.last_looked_x == 'right':
-       
-       player.set_curr_frame(3)
     
-    if player.last_looked_x == 'left':
-       
-       player.set_curr_frame(2)
-  
-  
 
-  if kb.key_pressed("A"):
+    if kb.key_pressed("W"):
 
-    player.move_left(dt)
-    player.set_curr_frame(0)
+      player.last_looked = 3 * math.pi / 2
 
+      if player.last_looked_x == 'right':
+        
+        player.set_curr_frame(3)
+      
+      if player.last_looked_x == 'left':
+        
+        player.set_curr_frame(2)
+    
+    
 
+    if kb.key_pressed("A"):
 
-  if kb.key_pressed("D"):
-
-    player.move_right(dt)
-    player.set_curr_frame(1)
-
-  
-
-  if kb.key_pressed("SPACE") and player.is_grounded:
-
-    player.jump(dt)
+      player.move_left(dt)
+      player.set_curr_frame(0)
 
 
 
-  if kb.key_pressed("E") and player.is_visible:
-     
-     player.is_visible = False
+    if kb.key_pressed("D"):
 
-     player.invisibilty_timer = 5
-  
+      player.move_right(dt)
+      player.set_curr_frame(1)
+
+    
+
+    if kb.key_pressed("SPACE") and player.is_grounded:
+
+      player.jump(dt)
+
+
+
+    if kb.key_pressed("E") and player.is_visible:
+      
+      player.is_visible = False
+
+      player.invisibilty_timer = 5
+    
+
+
+    if kb.key_pressed("Q") and not torch.was_thrown:
+      
+        player.throw_torch(torch)
+
 
 
   if kb.key_pressed("ESC"):
@@ -152,7 +159,5 @@ def get_input(dt: float, win: Window, player: Player, torch: Torch) -> None:
      win.close()
 
 
-  if kb.key_pressed("Q") and not torch.was_thrown:
-     
-     player.throw_torch(torch)
+
   
