@@ -224,12 +224,12 @@ class Player(Entity):
   
   def check_knockback(self, dt: float) -> None:
 
-    while self.knockback_timer > 0:
+    if self.knockback_timer > 0:
 
       self.knockback_timer -= dt
 
-      self.x += self.knockback_direction * 150 * dt
-      self.y -= 120 * dt
+      self.x += self.knockback_direction * 200 * dt
+      self.y -= 220 * dt
 
     if self.knockback_timer < 0:
 
