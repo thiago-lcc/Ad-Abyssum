@@ -1,10 +1,41 @@
 import pygame
 import math
-from classes import Player, Torch
+from classes import Player, Torch, Block
 from pplay.window import Window
 from pplay.gameimage import GameImage
 
 darkness = pygame.Surface((3000, 3000), pygame.SRCALPHA)
+
+
+
+
+def create_blocks(blocks: list, win: Window) -> None:
+   
+  for block in blocks:
+     
+     x,y = block
+
+     b = Block("assets/block.png")
+     b.set_position(x, y)
+    
+
+  for x in range(0, win.width, 70):
+     
+     b_top = Block("assets/block.png")
+     b_bottom = Block("assets/block.png")
+
+     b_top.set_position(x, 0)
+     b_bottom.set_position(x, win.height - 70)
+  
+  for y in range(0, win.height, 70):
+     
+     b_left = Block("assets/block.png")
+     b_right = Block("assets/block.png")
+
+     b_left.set_position(0, y)
+     b_right.set_position(win.width - 70, y)
+
+
 
 
 

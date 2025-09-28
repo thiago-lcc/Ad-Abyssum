@@ -2,8 +2,34 @@ from pplay import sprite, window
 from math import pi
 
 
-ground = 600
 gravity = 1000 #pix/s^2
+
+
+
+class Block(sprite.Sprite):
+
+  _instances = []
+
+
+
+  def __init__(self, image_file, frames=1):
+
+
+    super(Block, self).__init__(image_file, frames)
+
+    Block._instances.append(self)
+  
+
+
+
+  @classmethod
+  def draw_all(cls) -> None:
+
+    for block in cls._instances:
+
+      block.draw()
+
+
 
 
 
@@ -15,9 +41,11 @@ class Entity(sprite.Sprite):
     super(Entity, self).__init__(image_file, frames)
 
 
-    self.is_grounded = True
+    self.is_grounded = False
 
     self.vel_y = 0
+
+
 
 
 
@@ -31,16 +59,71 @@ class Entity(sprite.Sprite):
 
 
 
-  def check_if_grounded(self, ground) -> None:
 
-    if self.y >= ground:
 
-      self.is_grounded = True
-      self.vel_y = 0
+  def check_block_collisions(self) -> None:
+    
+    
+   ### must be called AFTER movement ###
 
-    else:
 
-      self.is_grounded = False
+    # previous position fallback (first frame)
+    prev_x = getattr(self, "prev_x", self.x)
+    prev_y = getattr(self, "prev_y", self.y)
+
+    dx = self.x - prev_x
+    dy = self.y - prev_y
+
+    # Save current coords
+    cur_x, cur_y = self.x, self.y
+
+    # ---------- HORIZONTAL resolution ----------
+    if dx != 0:
+      # Temporarily test horizontal movement at previous vertical position
+      self.y = prev_y
+      collided_block = None
+      for block in Block._instances:
+        if self.collided(block):
+          collided_block = block
+          break
+
+      if collided_block:
+        if dx > 0:
+          # moved right into block -> snap to its left
+          self.x = collided_block.x - self.width
+        else:
+          # moved left into block -> snap to its right
+          self.x = collided_block.x + collided_block.width
+
+    # restore vertical position after horizontal resolution
+    # but keep the resolved self.x
+    self.y = cur_y
+
+    # ---------- VERTICAL resolution ----------
+    # reset grounded assumption; we'll set True if we land on something
+    self.is_grounded = False
+
+    if dy != 0:
+      collided_block = None
+      for block in Block._instances:
+        if self.collided(block):
+          collided_block = block
+          break
+
+      if collided_block:
+        if dy > 0:
+          # moved down -> land on top of block
+          self.y = collided_block.y - self.height
+          self.vel_y = 0
+          self.is_grounded = True
+        else:
+          # moved up -> hit head on underside
+          self.y = collided_block.y + collided_block.height
+          self.vel_y = 0
+
+    # store prev position for next frame
+    self.prev_x = self.x
+    self.prev_y = self.y
 
 
 
@@ -62,6 +145,8 @@ class Torch(Entity):
   
 
 
+
+
   def check_hits(self, win: window.Window) -> None:
 
     for enemy in Enemy._instances:
@@ -71,10 +156,15 @@ class Torch(Entity):
         self.speed_x = 0
         self.hit_target = True
       
-    if self.x >= win.width or self.x <= 0:
+    for block in Block._instances:
 
-      self.speed_x = 0
-      self.hit_target = True
+      if self.collided(block):
+
+        self.speed_x = 0
+        self.hit_target = True
+
+
+
 
   
   def update(self, dt: float, win: window.Window, player) -> None:
@@ -103,7 +193,7 @@ class Torch(Entity):
     
     if self.hit_target:
 
-      self.check_if_grounded(ground)
+      self.check_block_collisions()
       self.fall(dt)
 
     
@@ -145,6 +235,10 @@ class Player(Entity):
 
     self.knockback_direction = 0
 
+
+
+
+
   def move_right(self, dt: float) -> None:
     
     
@@ -153,6 +247,7 @@ class Player(Entity):
     self.last_looked = 0.0 #right
 
     self.last_looked_x = 'right'
+
 
 
 
@@ -169,6 +264,7 @@ class Player(Entity):
 
 
 
+
   def jump(self, dt: float) -> None:
 
 
@@ -176,6 +272,7 @@ class Player(Entity):
     self.is_grounded = False
 
   
+
 
 
   def check_invisibility(self, dt: float) -> None:
@@ -195,6 +292,7 @@ class Player(Entity):
 
 
 
+
   def throw_torch(self, torch: Torch) -> None:
 
     torch.was_thrown = True
@@ -203,11 +301,15 @@ class Player(Entity):
 
 
 
+
+
   def draw_hearts(self) -> None:
     
     for heart in self.heart_sprites:
 
       heart.draw()
+
+
 
 
 
@@ -220,6 +322,9 @@ class Player(Entity):
     elif self.safety_timer < 0:
 
       self.safety_timer = 0
+
+
+
 
   
   def check_knockback(self, dt: float) -> None:
@@ -235,11 +340,13 @@ class Player(Entity):
 
       self.knockback_timer = 0
 
+
+
+
   
-  def update(self, dt: float):
+  def update(self, dt: float) -> None:
     
     self.fall(dt)
-    self.check_if_grounded(ground)
     self.check_invisibility(dt)
 
     if self.is_visible:
@@ -250,12 +357,16 @@ class Player(Entity):
     self.check_knockback(dt)
     self.draw_hearts()
 
+    self.check_block_collisions()
+
 
 
 
 class Enemy(Entity):
 
   _instances = [] 
+
+
 
   def __init__(self, image_file, frames=1):
 
@@ -272,7 +383,10 @@ class Enemy(Entity):
     Enemy._instances.append(self) #every object created is added to the _instances list
 
 
-  def hit_player(self, player: Player):
+
+
+
+  def hit_player(self, player: Player) -> None:
     
     player.hearts -= 1
 
@@ -283,6 +397,9 @@ class Enemy(Entity):
     player.knockback_timer = 0.5
 
     player.knockback_direction = self.direction
+
+
+
 
 
   
@@ -298,11 +415,9 @@ class Enemy(Entity):
       self.direction = 1
     
 
-
-    if self.detection_radius >= abs(self.x - player.x) and player.is_visible:
+    if self.detection_radius >= abs(self.x - player.x) and self.detection_radius >= abs(self.y - player.y) and player.is_visible:
 
       self.move_x(self.speed * self.direction * dt)
-
 
 
     if self.collided(player) and player.safety_timer == 0:
@@ -311,14 +426,16 @@ class Enemy(Entity):
 
 
 
+
+
   @classmethod
-  def update_all(cls, dt, player):
+  def update_all(cls, dt, player) -> None:
 
     for enemy in cls._instances:
 
       enemy.update(dt, player)
       enemy.fall(dt)
-      enemy.check_if_grounded(ground)
+      enemy.check_block_collisions()
       enemy.draw()
 
 

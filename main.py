@@ -1,8 +1,6 @@
 from pplay import window, sprite, gameimage
-import pygame
-import math
-from classes import Player, Enemy, Torch
-from setup import darkness_setup, get_input, load_background
+from classes import Player, Enemy, Torch, Block
+from setup import darkness_setup, get_input, load_background, create_blocks
 
 
 
@@ -14,9 +12,6 @@ win.set_fullscreen()
 
 background = gameimage.GameImage("assets/cave_bg_tiled.png")
 
-
-
-ground = 600
 
 
 player = Player("assets/player_sprites.png", 6)
@@ -34,6 +29,9 @@ torch = Torch("assets/torch.png")
 torch.set_position(player.x, player.y)
 
 
+create_blocks([(600,win.height-140)], win)
+
+
 
 def main() -> None:
   
@@ -49,6 +47,8 @@ def main() -> None:
 
 
     Enemy.update_all(dt, player)
+
+    Block.draw_all()
 
 
 
