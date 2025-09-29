@@ -10,22 +10,22 @@ win.set_title("Ad Abyssum")
 win.set_fullscreen()
 
 
-background = gameimage.GameImage("assets/cave_bg_tiled.png")
+background = gameimage.GameImage("assets/sprites/cave_bg_tiled.png")
 
 
 
-player = Player("assets/player_sprites.png", 6)
+player = Player("assets/sprites/player_sprites.png", 6)
 player.set_position(400, 500)
 player.set_curr_frame(1)
 player.heart_sprites[1].set_position(player.heart_sprites[0].width, 0)
 player.heart_sprites[2].set_position(player.heart_sprites[0].width * 2, 0)
 
 
-enemy = Enemy("assets/enemy.png")
+enemy = Enemy("assets/sprites/enemy.png")
 enemy.set_position(800, 500)
 
 
-torch = Torch("assets/torch.png")
+torch = Torch("assets/sprites/torch.png")
 torch.set_position(player.x, player.y)
 
 

@@ -15,22 +15,22 @@ def create_blocks(blocks: list, win: Window) -> None:
      
      x,y = block
 
-     b = Block("assets/block.png")
+     b = Block("assets/sprites/block.png")
      b.set_position(x, y)
     
 
   for x in range(0, win.width, 70):
      
-     b_top = Block("assets/block.png")
-     b_bottom = Block("assets/block.png")
+     b_top = Block("assets/sprites/block.png")
+     b_bottom = Block("assets/sprites/block.png")
 
      b_top.set_position(x, 0)
      b_bottom.set_position(x, win.height - 70)
   
   for y in range(0, win.height, 70):
      
-     b_left = Block("assets/block.png")
-     b_right = Block("assets/block.png")
+     b_left = Block("assets/sprites/block.png")
+     b_right = Block("assets/sprites/block.png")
 
      b_left.set_position(0, y)
      b_right.set_position(win.width - 70, y)
@@ -120,6 +120,7 @@ def get_input(dt: float, win: Window, player: Player, torch: Torch) -> None:
 
   kb = win.get_keyboard()
   ms = win.get_mouse()
+  player.is_moving = False
 
   if player.hearts > 0 and player.knockback_timer == 0:
 

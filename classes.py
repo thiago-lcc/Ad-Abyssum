@@ -1,8 +1,18 @@
 from pplay import sprite, window
 from math import pi
+import pygame
 
 
 gravity = 1000 #pix/s^2
+
+
+
+pygame.init()
+pygame.mixer.init()
+
+player_walk_sound = pygame.mixer.Sound("assets/sounds/step.mp3")
+player_walk_sound.set_volume(0.3)
+
 
 
 
@@ -217,7 +227,7 @@ class Player(Entity):
 
     self.hearts = 3
 
-    self.heart_sprites = [sprite.Sprite("assets/heart_spritesheet.png",2), sprite.Sprite("assets/heart_spritesheet.png",2), sprite.Sprite("assets/heart_spritesheet.png",2)]
+    self.heart_sprites = [sprite.Sprite("assets/sprites/heart_spritesheet.png",2), sprite.Sprite("assets/sprites/heart_spritesheet.png",2), sprite.Sprite("assets/sprites/heart_spritesheet.png",2)]
 
     self.last_looked = 0.0 #right
 
@@ -235,6 +245,11 @@ class Player(Entity):
 
     self.knockback_direction = 0
 
+    self.is_moving = False
+
+
+    self.walk_channel = pygame.mixer.Channel(1)
+
 
 
 
@@ -247,6 +262,8 @@ class Player(Entity):
     self.last_looked = 0.0 #right
 
     self.last_looked_x = 'right'
+
+    self.is_moving = True
 
 
 
@@ -261,6 +278,8 @@ class Player(Entity):
 
     self.last_looked_x = 'left'
 
+    self.is_moving = True
+
 
 
 
@@ -270,6 +289,8 @@ class Player(Entity):
 
     self.vel_y = self.jump_strength
     self.is_grounded = False
+
+    self.walk_channel.stop()
 
   
 
@@ -358,6 +379,17 @@ class Player(Entity):
     self.draw_hearts()
 
     self.check_block_collisions()
+
+
+    # manages walking sounds
+
+    if self.is_moving and not self.walk_channel.get_busy() and self.is_grounded:
+
+      self.walk_channel.play(player_walk_sound, loops=-1)
+    
+    elif (not self.is_moving and self.walk_channel.get_busy()):
+
+      self.walk_channel.stop()
 
 
 
