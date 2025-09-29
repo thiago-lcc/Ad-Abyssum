@@ -152,8 +152,14 @@ class Torch(Entity):
     self.speed_x = 0
     self.speed_y = 0
     self.direction = 'right'
-  
-
+    self.frame_torch = 0
+    self.actual_frame = self.frame_torch
+    self.set_curr_frame(self.actual_frame)
+    self.time_frame = 0.3
+    self.time_counter = 0
+    self.actual_frame = 0
+    self.torch_collision = 0
+    self.last_frame = 6
 
 
 
@@ -173,10 +179,31 @@ class Torch(Entity):
         self.speed_x = 0
         self.hit_target = True
 
+  def animation_torch(self, dt):
 
+    if self.hit_target:
+        
+      self.set_curr_frame(self.torch_collision) 
+      return 
+    
+    if self.was_thrown:
+      
+      self.time_counter += dt
+      
+      if self.time_counter >= self.time_frame:
 
+          self.time_counter = 0
+          self.actual_frame += 1
+        
+          if self.was_thrown:
 
-  
+            self.actual_frame += 1
+
+            if self.actual_frame > self.last_frame:
+              self.actual_frame = 0
+
+            self.set_curr_frame(self.actual_frame)
+    
   def update(self, dt: float, win: window.Window, player) -> None:
 
     if self.was_thrown:
@@ -211,6 +238,7 @@ class Torch(Entity):
     self.move_x(self.speed_x * dt)
     self.move_y(self.speed_y * dt)
 
+    self.animation_torch(dt)
 
 
 
