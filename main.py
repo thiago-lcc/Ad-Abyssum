@@ -1,6 +1,7 @@
 from pplay import window, sprite, gameimage
 from classes import Player, Enemy, Torch, Block
 from setup import darkness_setup, get_input, load_background, create_blocks
+import pygame
 
 
 
@@ -33,8 +34,20 @@ create_blocks([(600,win.height-140)], win)
 
 
 
+pygame.mixer.init()
+
+background_music = pygame.mixer.Sound("assets/sounds/background_music.mp3")
+background_music.set_volume(0.4)
+
+
+
 def main() -> None:
+
+
+  background_music.play(loops=-1)
   
+
+
   while True:
 
 

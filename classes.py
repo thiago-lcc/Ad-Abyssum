@@ -7,7 +7,6 @@ gravity = 1000 #pix/s^2
 
 
 
-pygame.init()
 pygame.mixer.init()
 
 player_walk_sound = pygame.mixer.Sound("assets/sounds/step.mp3")
@@ -227,10 +226,10 @@ class Torch(Entity):
         self.speed_x *= -1
 
 
-    
+    self.check_block_collisions()
+
     if self.hit_target:
 
-      self.check_block_collisions()
       self.fall(dt)
 
     
