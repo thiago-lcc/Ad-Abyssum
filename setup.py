@@ -86,20 +86,6 @@ def load_torch(torch: Torch):
 
 
 
-
-def load_background(win: Window, background: GameImage) -> None:
-   
-
-    win.set_background_color((0,0,0))
-
-    background.draw()
-
-
-
-
-
-
-
 def darkness_setup(win: Window, player: Player, torch: Torch) -> None:
   
 
@@ -188,7 +174,7 @@ def get_input(dt: float, win: Window, player: Player, torch: Torch) -> None:
 
   if kb.key_pressed("ESC"):
      
-     win.close()
+     win.mode = "menu"
 
 
 

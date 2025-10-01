@@ -1,6 +1,6 @@
 from pplay import window, sprite, gameimage
-from classes import Player, Enemy, Torch, Block
-from setup import darkness_setup, get_input, load_background, create_blocks
+from classes import Player, Enemy, Torch, Block, Menu_Button
+from setup import darkness_setup, get_input, create_blocks
 import pygame
 
 
@@ -9,6 +9,7 @@ import pygame
 win = window.Window(0,0)
 win.set_title("Ad Abyssum")
 win.set_fullscreen()
+win.mode = "game"
 
 
 background = gameimage.GameImage("assets/sprites/cave_bg_tiled.png")
@@ -28,6 +29,13 @@ enemy.set_position(800, 500)
 
 torch = Torch("assets/sprites/torch_sprites_5.png", 7)
 torch.set_position(player.x, player.y)
+
+
+resume = Menu_Button("assets/sprites/resume.png")
+exit = Menu_Button("assets/sprites/exit.png")
+
+resume.set_position(win.width/2 - resume.width/2, win.height/2 - resume.height/2 - 200)
+exit.set_position(win.width/2 - resume.width/2, win.height/2 - resume.height/2 + 200)
 
 
 create_blocks([(600,win.height-140)], win)
@@ -50,8 +58,7 @@ def main() -> None:
     get_input(dt, win, player, torch)
     
 
-    load_background(win, background)
-
+    background.draw()
 
 
     Enemy.update_all(dt, player)
@@ -71,14 +78,23 @@ def main() -> None:
 
 
 
-    win.update()
-
-
 
 def menu() -> None:
    
+    ms = win.get_mouse()
+    kb = win.get_keyboard()
 
-    pass
+
+    if resume.was_pressed(ms):
+       win.mode = "game"
+    
+    if exit.was_pressed(ms):
+       win.close()
+    
+    Menu_Button.draw_all()
+       
+       
+    
 
 
 
@@ -90,8 +106,25 @@ if __name__ == "__main__":
 
   background_music.play(loops=-1)
 
+
   while True:
-     
-    main()
+    
+
+    win.set_background_color((0,0,0))
+
+
+
+    match win.mode:
+       
+      case "game":
+        main()
+      
+      case "menu":
+        menu()
+
+        
+    
+    win.update()
+        
 
   
