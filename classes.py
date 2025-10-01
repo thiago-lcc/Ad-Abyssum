@@ -13,6 +13,35 @@ player_walk_sound = pygame.mixer.Sound("assets/sounds/step.mp3")
 player_walk_sound.set_volume(0.3)
 
 
+class Menu_Button(sprite.Sprite):
+
+
+  _instances = []
+
+  def __init__(self, image_file, frames=1):
+
+
+    super(Menu_Button, self).__init__(image_file, frames)
+
+    Menu_Button._instances.append(self)
+  
+
+  def was_pressed(self, ms) -> bool:
+
+    if ms.is_over_object(self) and ms.is_button_pressed(1):
+
+      return True
+  
+
+  @classmethod
+  def draw_all(cls) -> None:
+
+    for button in cls._instances:
+
+      button.draw()
+
+
+
 
 
 class Block(sprite.Sprite):

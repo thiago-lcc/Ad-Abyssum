@@ -44,11 +44,6 @@ background_music.set_volume(0.4)
 def main() -> None:
 
 
-  background_music.play(loops=-1)
-  
-
-
-  while True:
 
 
     dt = win.delta_time() #time passed between current and last frame
@@ -80,8 +75,23 @@ def main() -> None:
 
 
 
+def menu() -> None:
+   
+
+    pass
+
+
+
+
 
 
 if __name__ == "__main__":
    
-   main()
+
+  background_music.play(loops=-1)
+
+  while True:
+     
+    main()
+
+  
