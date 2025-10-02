@@ -1,10 +1,22 @@
 import pygame
 import math
-from classes import Player, Torch, Block
+from classes import Player, Torch, Block, Enemy, Door
 from pplay.window import Window
 from pplay.gameimage import GameImage
+import json
 
 darkness = pygame.Surface((3000, 3000), pygame.SRCALPHA)
+
+
+
+def read_json(path: str) -> dict:
+   
+  with open(path, "r") as file:
+     
+    dictionary = json.load(file)
+  
+  return dictionary
+
 
 
 
@@ -35,6 +47,63 @@ def create_blocks(blocks: list, win: Window) -> None:
      b_left.set_position(0, y)
      b_right.set_position(win.width - 70, y)
 
+
+
+
+def create_enemies(enemies) -> None:
+  pass
+
+
+def create_doors(doors: list) -> None:
+  
+  for door in doors:
+
+    x,y = door[0]
+    side = door[1]
+
+    d = Door("assets/sprites/door.png", side)
+    d.set_position(x,y)
+
+
+def load_level(levels: dict, win: Window, player: Player, player_spawn: str) -> None:
+
+  blocks = levels[win.level]["blocks"]
+  enemies = levels[win.level]["enemies"]
+  doors = levels[win.level]["doors"]
+
+  create_blocks(blocks, win)
+  create_enemies(enemies)
+  create_doors(doors)
+
+  for door in Door._instances:
+
+    if door.side == player_spawn:
+
+      player.set_position(door.x + 70, door.y)
+
+
+
+
+def change_levels(levels: dict, win: Window, door_side: str, player: Player) -> None:
+  
+  Door._instances.clear()
+  Enemy._instances.clear()
+  Block._instances.clear()
+
+  player_spawn = ""
+
+  if door_side == "left":
+     
+    win.level -= 1
+    player_spawn = "right"
+  
+  elif door_side == "right":
+    
+    levels[win.level]["enemies"] = []
+    win.level += 1
+    player_spawn = "left"
+  
+  load_level(levels, win, player, player_spawn)
 
 
 
@@ -173,8 +242,9 @@ def get_input(dt: float, win: Window, player: Player, torch: Torch) -> None:
 
 
   if kb.key_pressed("ESC"):
-     
-     win.mode = "menu"
+        
+        ms.unhide()
+        win.mode = "menu"
 
 
 

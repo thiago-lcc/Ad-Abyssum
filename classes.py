@@ -26,12 +26,12 @@ class Menu_Button(sprite.Sprite):
     Menu_Button._instances.append(self)
   
 
+
   def was_pressed(self, ms) -> bool:
 
-    if ms.is_over_object(self) and ms.is_button_pressed(1):
-
-      return True
+    return ms.is_over_object(self) and ms.is_button_pressed(1)
   
+
 
   @classmethod
   def draw_all(cls) -> None:
@@ -525,6 +525,71 @@ class Enemy(Entity):
       enemy.fall(dt)
       enemy.check_block_collisions()
       enemy.draw()
+
+
+
+
+class Door(sprite.Sprite):
+
+  _instances = []
+
+  def __init__(self, image_file, side, frames=1):
+
+
+    super(Door, self).__init__(image_file, frames)
+
+    Door._instances.append(self)
+
+
+    self.side = side
+
+  
+
+  def was_used(self, player: Player, kb, win: window.Window) -> bool:
+
+    if self.collided(player) and kb.key_pressed("UP") and win.door_cooldown == 0:
+      win.door_cooldown+=0.2
+      return True
+    
+    return False
+  
+  
+  def manage_cooldown(self, win: window.Window, dt: float):
+
+    if win.door_cooldown > 0:
+      win.door_cooldown -= dt
+    
+    elif win.door_cooldown < 0:
+      win.door_cooldown = 0
+
+
+  @classmethod
+  def update_all(cls, player:Player, kb, dt: float, win: window.Window) -> str:
+    
+    return_statement = ""
+
+    for door in cls._instances:
+
+      door.manage_cooldown(win, dt)
+
+      door.draw()
+
+      if door.was_used(player, kb, win):
+        return_statement = door.side
+    
+    return return_statement
+
+
+
+
+  
+
+
+      
+
+
+
+
 
 
 

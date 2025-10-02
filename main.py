@@ -1,6 +1,6 @@
 from pplay import window, sprite, gameimage
-from classes import Player, Enemy, Torch, Block, Menu_Button
-from setup import darkness_setup, get_input, create_blocks
+from classes import Player, Enemy, Torch, Block, Menu_Button, Door
+from setup import darkness_setup, get_input, create_blocks, read_json, change_levels, load_level
 import pygame
 
 
@@ -9,7 +9,11 @@ import pygame
 win = window.Window(0,0)
 win.set_title("Ad Abyssum")
 win.set_fullscreen()
+win.get_mouse().hide()
 win.mode = "game"
+win.level = 1
+win.door_cooldown = 0
+
 
 
 background = gameimage.GameImage("assets/sprites/cave_bg_tiled.png")
@@ -17,10 +21,14 @@ background = gameimage.GameImage("assets/sprites/cave_bg_tiled.png")
 
 
 player = Player("assets/sprites/player_sprites.png", 6)
-player.set_position(400, 500)
+player.set_position(140, 70)
 player.set_curr_frame(1)
 player.heart_sprites[1].set_position(player.heart_sprites[0].width, 0)
 player.heart_sprites[2].set_position(player.heart_sprites[0].width * 2, 0)
+
+
+levels = levels = {int(key): value for key, value in read_json("assets/test.json").items()}
+load_level(levels, win, player, "left")
 
 
 enemy = Enemy("assets/sprites/enemy.png")
@@ -37,11 +45,6 @@ exit = Menu_Button("assets/sprites/exit.png")
 resume.set_position(win.width/2 - resume.width/2, win.height/2 - resume.height/2 - 200)
 exit.set_position(win.width/2 - resume.width/2, win.height/2 - resume.height/2 + 200)
 
-
-create_blocks([(600,win.height-140)], win)
-
-
-
 pygame.mixer.init()
 
 background_music = pygame.mixer.Sound("assets/sounds/background_music.mp3")
@@ -53,7 +56,7 @@ def main() -> None:
 
 
 
-
+    kb = win.get_keyboard()
     dt = win.delta_time() #time passed between current and last frame
     get_input(dt, win, player, torch)
     
@@ -64,6 +67,15 @@ def main() -> None:
     Enemy.update_all(dt, player)
 
     Block.draw_all()
+
+    change_level = door_side = Door.update_all(player, kb, dt, win)
+
+
+
+    if bool(change_level):
+       
+       change_levels(levels, win, door_side, player)
+       
 
 
 
@@ -86,6 +98,7 @@ def menu() -> None:
 
 
     if resume.was_pressed(ms):
+       ms.hide()
        win.mode = "game"
     
     if exit.was_pressed(ms):
