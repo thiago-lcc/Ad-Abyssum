@@ -12,6 +12,12 @@ pygame.mixer.init()
 player_walk_sound = pygame.mixer.Sound("assets/sounds/step.mp3")
 player_walk_sound.set_volume(0.3)
 
+monster_scream_sound = pygame.mixer.Sound("assets/sounds/monster_scream.wav")
+monster_scream_sound.set_volume(0.3)
+
+
+
+
 
 class Menu_Button(sprite.Sprite):
 
@@ -193,12 +199,14 @@ class Torch(Entity):
 
   def check_hits(self, win: window.Window) -> None:
 
-    for enemy in Enemy._instances:
+    for enemy in Enemy._instances[:]:
 
-      if self.collided(enemy):
+      if self.collided(enemy) and not self.hit_target:
 
         self.speed_x = 0
         self.hit_target = True
+        Enemy._instances.remove(enemy)
+        enemy.scream_sound_channel.play(monster_scream_sound)
       
     for block in Block._instances:
 
@@ -467,6 +475,8 @@ class Enemy(Entity):
     self.direction = 1 #1 == right, -1 == left
 
     self.detection_radius = 400
+
+    self.scream_sound_channel = pygame.mixer.Channel(2)
 
     Enemy._instances.append(self) #every object created is added to the _instances list
 
