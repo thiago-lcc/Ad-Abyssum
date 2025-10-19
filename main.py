@@ -20,9 +20,9 @@ background = gameimage.GameImage("assets/sprites/cave_bg_tiled.png")
 
 
 
-player = Player("assets/sprites/player_sprites.png", 6)
+player = Player("assets/sprites/player_spritesheet.png", 14)
 player.set_position(140, 70)
-player.set_curr_frame(1)
+player.height -= 5
 player.heart_sprites[1].set_position(player.heart_sprites[0].width, 0)
 player.heart_sprites[2].set_position(player.heart_sprites[0].width * 2, 0)
 
@@ -32,7 +32,7 @@ load_level(levels, win, player, "left")
 
 
 enemy = Enemy("assets/sprites/enemy.png")
-enemy.set_position(800, 500)
+enemy.set_position(1000, 70)
 
 
 torch = Torch("assets/sprites/torch_sprites_5.png", 7)

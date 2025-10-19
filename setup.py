@@ -113,7 +113,7 @@ def load_flashlight(player: Player) -> None:
   
 
     # where the light "spawns" from
-    px = player.x + player.width/2 
+    px = player.x + player.width/2 - 5
     py = player.y + player.height/2 - 10
 
 
@@ -185,11 +185,11 @@ def get_input(dt: float, win: Window, player: Player, torch: Torch) -> None:
 
       if player.last_looked_x == 'right':
         
-        player.set_curr_frame(4)
+        player.set_curr_frame(5)
       
       if player.last_looked_x == 'left':
         
-        player.set_curr_frame(5)
+        player.set_curr_frame(8)
     
     
 
@@ -199,25 +199,25 @@ def get_input(dt: float, win: Window, player: Player, torch: Torch) -> None:
 
       if player.last_looked_x == 'right':
         
-        player.set_curr_frame(3)
+        player.set_curr_frame(6)
       
       if player.last_looked_x == 'left':
         
-        player.set_curr_frame(2)
+        player.set_curr_frame(7)
     
     
 
     if kb.key_pressed("A"):
 
       player.move_left(dt)
-      player.set_curr_frame(0)
+      player.set_curr_frame(13)
 
 
 
     if kb.key_pressed("D"):
 
       player.move_right(dt)
-      player.set_curr_frame(1)
+      player.set_curr_frame(0)
 
     
 
