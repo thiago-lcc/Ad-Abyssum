@@ -172,7 +172,7 @@ def darkness_setup(win: Window, player: Player, torch: Torch) -> None:
 
 def get_input(dt: float, win: Window, player: Player, torch: Torch) -> None:
    
-
+  player.timer = 0
   kb = win.get_keyboard()
   ms = win.get_mouse()
   player.is_moving = False
@@ -210,16 +210,14 @@ def get_input(dt: float, win: Window, player: Player, torch: Torch) -> None:
     if kb.key_pressed("A"):
 
       player.move_left(dt)
-      player.set_curr_frame(13)
+      player.animation_left(dt)
 
 
 
     if kb.key_pressed("D"):
 
       player.move_right(dt)
-      player.set_curr_frame(0)
-
-    
+      player.animation_right(dt)
 
     if kb.key_pressed("SPACE") and player.is_grounded:
 

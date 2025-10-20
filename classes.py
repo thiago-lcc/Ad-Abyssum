@@ -189,11 +189,11 @@ class Torch(Entity):
     self.frame_torch = 0
     self.actual_frame = self.frame_torch
     self.set_curr_frame(self.actual_frame)
-    self.time_frame = 0.3
+    self.time_frame = 0.1
     self.time_counter = 0
     self.actual_frame = 0
     self.torch_collision = 0
-    self.last_frame = 6
+    self.last_frame = 13
 
 
 
@@ -311,6 +311,11 @@ class Player(Entity):
 
     self.is_moving = False
 
+    self.frame_right = 0
+    
+    self.frame_left = 13
+    
+    self.counter = 0
 
     self.walk_channel = pygame.mixer.Channel(1)
 
@@ -408,9 +413,6 @@ class Player(Entity):
 
       self.safety_timer = 0
 
-
-
-
   
   def check_knockback(self, dt: float) -> None:
 
@@ -425,8 +427,29 @@ class Player(Entity):
 
       self.knockback_timer = 0
 
+  def animation_right(self, dt):
+      
+    self.counter += dt
+    
+    if self.counter >= 0.3:
+        self.frame_right += 1
+        self.counter = 0
+        if self.frame_right > 4:
+              self.frame_right = 0
+      
+    self.set_curr_frame(self.frame_right)    
 
-
+  def animation_left(self, dt):
+          
+    self.counter += dt
+    
+    if self.counter >= 0.3:
+        self.frame_left -= 1
+        self.counter = 0
+        if self.frame_left < 9:
+              self.frame_left = 13
+      
+    self.set_curr_frame(self.frame_left) 
 
   
   def update(self, dt: float) -> None:
@@ -470,6 +493,18 @@ class Enemy(Entity):
     super(Enemy, self).__init__(image_file, frames)
 
 
+    self.actual_frame = 8
+    
+    self.set_curr_frame(self.actual_frame)
+    
+    self.time_frame = 0.3
+    
+    self.time_counter = 0
+    
+    self.last_frame_left = 0
+    
+    self.last_frame_right = 17
+    
     self.speed = 100
 
     self.direction = 1 #1 == right, -1 == left
@@ -479,7 +514,6 @@ class Enemy(Entity):
     self.scream_sound_channel = pygame.mixer.Channel(2)
 
     Enemy._instances.append(self) #every object created is added to the _instances list
-
 
 
 
@@ -497,10 +531,44 @@ class Enemy(Entity):
     player.knockback_direction = self.direction
 
 
+  def enemy_animation(self, dt: float, player: Player):
+    self.time_counter += dt
+        
+    if self.direction == -1:
+      self.set_curr_frame(self.actual_frame)
+              
+      if self.detection_radius >= abs(self.x - player.x) and self.detection_radius >= abs(self.y - player.y) and player.is_visible:
+                
+        if self.time_counter >= self.time_frame:
+          self.time_counter = 0
+          self.actual_frame -= 1 
+                      
+          if self.actual_frame < self.last_frame_left:
+              self.actual_frame = 8
 
+              self.set_curr_frame(self.actual_frame)
 
+          else:
+                self.set_curr_frame(8)
+      
+      if self.direction == 1:
+              
+        self.set_curr_frame(self.actual_frame)
+        if self.detection_radius >= abs(self.x - player.x) and self.detection_radius >= abs(self.y - player.y) and player.is_visible:        
 
-  
+          if self.time_counter >= self.time_frame:
+            self.time_counter = 0
+            self.actual_frame += 1 
+                      
+                      
+            if self.actual_frame > self.last_frame_right:
+              self.actual_frame = 9
+                      
+              self.set_curr_frame(self.actual_frame)
+            else:
+              self.set_curr_frame(9)
+              
+              
   def update(self, dt: float, player: Player) -> None:
 
 
@@ -534,6 +602,7 @@ class Enemy(Entity):
       enemy.update(dt, player)
       enemy.fall(dt)
       enemy.check_block_collisions()
+      enemy.enemy_animation(dt, player)
       enemy.draw()
 
 
@@ -590,11 +659,90 @@ class Door(sprite.Sprite):
     return return_statement
 
 
+class Spider(sprite.Sprite):
+    _instances = []  
+    
+    def __init__(self, image_file, frames=1):
+        super(Spider, self).__init__(image_file, frames)
+        
+        self.position = 'ceil'
+        
+        self.counter = 0.0
+        
+        self.on_ceil = False
+        
+        self.speed = 500.0
+        
+        Spider._instances.append(self)
+      
+    def change_position(self, player: Player):
+
+      if abs(player.x - self.x) <= 325:  
+          self.on_ceil = True
 
 
+    def update_ceil(self, dt: float):
+        if self.position == 'ceil' and self.on_ceil:
+            self.counter += dt
+            
+            if self.counter >= 0.4:
+                
+                self.position = 'fall'
+        else:
+            self.counter = 0
+
+    
+    def falling(self, dt, player, block):
+        
+        if self.position == 'fall':
+            self.y += self.speed * dt
+            
+            if self.y >= player.y + 75:
+              self.position = 'ground'
+    
+    def back(self, dt, player, win):
+        
+        if self.position == 'ground':
+            self.x += 300 * dt    
+            if self.x == win.width - 100:
+              self.position = 'wall'      
+    
+    def up(self, dt):
+          
+          if self.position == 'wall':
+            self.y += 300 * dt
+    
+    def hit_player(self, player: Player) -> None:
+        
+      player.hearts -= 1
+
+      player.safety_timer += 3
+
+      player.heart_sprites[player.hearts].set_curr_frame(1) 
+
+
+    
+    def update(self, player):
+      
+      if self.collided(player) and player.safety_timer == 0:
+            
+        self.hit_player(player)
+      
+        
+    @classmethod
+    def update_spider(cls, dt, player, win, block):
+        
+        for spider in cls._instances:
+            spider.change_position(player)
+            spider.update_ceil(dt)
+            spider.falling(dt, player, block)
+            spider.back(dt, player, win)
+            spider.update(player)
+            spider.draw()
+
+
+        
   
-
-
       
 
 
