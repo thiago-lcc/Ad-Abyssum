@@ -35,7 +35,7 @@ enemy = Enemy("assets/sprites/enemy.png")
 enemy.set_position(1000, 70)
 
 
-torch = Torch("assets/sprites/torch_sprites_5.png", 7)
+torch = Torch("assets/sprites/torch.png", 14)
 torch.set_position(player.x, player.y)
 
 
