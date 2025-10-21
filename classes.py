@@ -511,7 +511,7 @@ class Enemy(Entity):
     super(Enemy, self).__init__(image_file, frames)
 
 
-    self.actual_frame = 8
+    self.actual_frame = 4
     
     self.set_curr_frame(self.actual_frame)
     
@@ -519,9 +519,9 @@ class Enemy(Entity):
     
     self.time_counter = 0
     
-    self.last_frame_left = 0
+    self.last_frame_left = 7
     
-    self.last_frame_right = 17
+    self.last_frame_right = 3
     
     self.speed = 100
 
@@ -562,12 +562,12 @@ class Enemy(Entity):
           self.actual_frame -= 1 
                       
           if self.actual_frame < self.last_frame_left:
-              self.actual_frame = 8
+              self.actual_frame = 4
 
               self.set_curr_frame(self.actual_frame)
 
           else:
-                self.set_curr_frame(8)
+                self.set_curr_frame(4)
       
       if self.direction == 1:
               
@@ -580,11 +580,11 @@ class Enemy(Entity):
                       
                       
             if self.actual_frame > self.last_frame_right:
-              self.actual_frame = 9
+              self.actual_frame = 0
                       
               self.set_curr_frame(self.actual_frame)
             else:
-              self.set_curr_frame(9)
+              self.set_curr_frame(0)
               
               
   def update(self, dt: float, player: Player) -> None:
@@ -675,6 +675,10 @@ class Door(sprite.Sprite):
         return_statement = door.side
     
     return return_statement
+
+
+
+
 
 
 class Spider(sprite.Sprite):

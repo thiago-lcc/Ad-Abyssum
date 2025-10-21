@@ -31,8 +31,9 @@ levels = levels = {int(key): value for key, value in read_json("assets/test.json
 load_level(levels, win, player, "left")
 
 
-enemy = Enemy("assets/sprites/enemy.png")
+enemy = Enemy("assets/sprites/enemy.png", 8)
 enemy.set_position(1000, 70)
+enemy.height -= 10
 
 spider = Spider("assets/sprites/man.png", 31)
 spider.set_position(600, 100)
@@ -67,13 +68,14 @@ def main() -> None:
     background.draw()
 
 
-    Enemy.update_all(dt, player)
 
     Block.draw_all()
     
-    Spider.update_spider(dt, player, win)
-    
     change_level = door_side = Door.update_all(player, kb, dt, win)
+
+    Spider.update_spider(dt, player, win)
+
+    Enemy.update_all(dt, player)
 
 
 
