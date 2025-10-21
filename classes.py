@@ -511,9 +511,11 @@ class Enemy(Entity):
     super(Enemy, self).__init__(image_file, frames)
 
 
-    self.actual_frame = 4
+    self.actual_frame_right = 0
     
-    self.set_curr_frame(self.actual_frame)
+    self.actual_frame_left = 4
+    
+    self.set_curr_frame(4)
     
     self.time_frame = 0.3
     
@@ -553,38 +555,38 @@ class Enemy(Entity):
     self.time_counter += dt
         
     if self.direction == -1:
-      self.set_curr_frame(self.actual_frame)
+      self.set_curr_frame(self.actual_frame_left)
               
       if self.detection_radius >= abs(self.x - player.x) and self.detection_radius >= abs(self.y - player.y) and player.is_visible:
                 
         if self.time_counter >= self.time_frame:
           self.time_counter = 0
-          self.actual_frame -= 1 
+          self.actual_frame_left += 1 
                       
-          if self.actual_frame < self.last_frame_left:
-              self.actual_frame = 4
+          if self.actual_frame_left > self.last_frame_left:
+              self.actual_frame_left = 4
 
-              self.set_curr_frame(self.actual_frame)
+              self.set_curr_frame(self.actual_frame_left)
 
           else:
                 self.set_curr_frame(4)
       
-      if self.direction == 1:
+    if self.direction == 1:
               
-        self.set_curr_frame(self.actual_frame)
-        if self.detection_radius >= abs(self.x - player.x) and self.detection_radius >= abs(self.y - player.y) and player.is_visible:        
+      self.set_curr_frame(self.actual_frame_right)
+      if self.detection_radius >= abs(self.x - player.x) and self.detection_radius >= abs(self.y - player.y) and player.is_visible:        
 
-          if self.time_counter >= self.time_frame:
-            self.time_counter = 0
-            self.actual_frame += 1 
+        if self.time_counter >= self.time_frame:
+          self.time_counter = 0
+          self.actual_frame_right += 1 
                       
                       
-            if self.actual_frame > self.last_frame_right:
-              self.actual_frame = 0
+          if self.actual_frame_right > self.last_frame_right:
+            self.actual_frame_right = 0
                       
-              self.set_curr_frame(self.actual_frame)
-            else:
-              self.set_curr_frame(0)
+            self.set_curr_frame(self.actual_frame_right)
+          else:
+            self.set_curr_frame(0)
               
               
   def update(self, dt: float, player: Player) -> None:
@@ -681,7 +683,7 @@ class Door(sprite.Sprite):
 
 
 
-class Spider(sprite.Sprite):
+class Spider(Entity):
     _instances = []  
     
     def __init__(self, image_file, frames=1):
@@ -693,7 +695,7 @@ class Spider(sprite.Sprite):
         
         self.on_ceil = False
         
-        self.speed = 500.0
+        self.speed = 300.0
         
         Spider._instances.append(self)
       
@@ -756,6 +758,7 @@ class Spider(sprite.Sprite):
             spider.falling(dt, player)
             spider.back(dt, player, win)
             spider.update(player)
+            
             spider.draw()
 
 
