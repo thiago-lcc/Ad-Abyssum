@@ -189,7 +189,7 @@ class Torch(Entity):
     self.frame_torch = 0
     self.actual_frame = self.frame_torch
     self.set_curr_frame(self.actual_frame)
-    self.time_frame = 0.1
+    self.time_frame = 0.08
     self.time_counter = 0
     self.actual_frame = 0
     self.torch_collision = 0
@@ -431,7 +431,7 @@ class Player(Entity):
       
     self.counter += dt
     
-    if self.counter >= 0.3:
+    if self.counter >= 0.25:
         self.frame_right += 1
         self.counter = 0
         if self.frame_right > 4:
@@ -443,7 +443,7 @@ class Player(Entity):
           
     self.counter += dt
     
-    if self.counter >= 0.3:
+    if self.counter >= 0.25:
         self.frame_left -= 1
         self.counter = 0
         if self.frame_left < 9:
@@ -692,7 +692,7 @@ class Spider(sprite.Sprite):
             self.counter = 0
 
     
-    def falling(self, dt, player, block):
+    def falling(self, dt, player):
         
         if self.position == 'fall':
             self.y += self.speed * dt
@@ -707,10 +707,6 @@ class Spider(sprite.Sprite):
             if self.x == win.width - 100:
               self.position = 'wall'      
     
-    def up(self, dt):
-          
-          if self.position == 'wall':
-            self.y += 300 * dt
     
     def hit_player(self, player: Player) -> None:
         
@@ -730,12 +726,12 @@ class Spider(sprite.Sprite):
       
         
     @classmethod
-    def update_spider(cls, dt, player, win, block):
+    def update_spider(cls, dt, player, win):
         
         for spider in cls._instances:
             spider.change_position(player)
             spider.update_ceil(dt)
-            spider.falling(dt, player, block)
+            spider.falling(dt, player)
             spider.back(dt, player, win)
             spider.update(player)
             spider.draw()
