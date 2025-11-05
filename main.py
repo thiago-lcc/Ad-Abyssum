@@ -68,10 +68,10 @@ def main() -> None:
     background.draw()
 
 
-
-    Block.draw_all()
     
     change_level = door_side = Door.update_all(player, kb, dt, win)
+
+    Block.draw_all()
 
     Spider.update_spider(dt, player, win)
 

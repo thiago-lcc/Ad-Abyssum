@@ -171,7 +171,7 @@ class Entity(sprite.Sprite):
 
 
 
-
+   
 
 
 class Torch(Entity):
@@ -325,6 +325,8 @@ class Player(Entity):
   
     self.knockback_timer = 0
 
+    self.damage_effect_timer = 0
+
     self.knockback_direction = 0
 
     self.is_moving = False
@@ -386,7 +388,7 @@ class Player(Entity):
   def check_invisibility(self, dt: float) -> None:
 
 
-    if not self.is_visible:
+    if self.invisibilty_timer > 0:
 
       self.invisibilty_timer -= dt
 
@@ -426,10 +428,24 @@ class Player(Entity):
     if self.safety_timer > 0:
 
       self.safety_timer -= dt
+      
+      self.damage_effect_timer += dt
+
+
+      if self.damage_effect_timer > 0.05:
+
+        self.is_visible = not self.is_visible
+
+        self.damage_effect_timer = 0
+
     
     elif self.safety_timer < 0:
 
       self.safety_timer = 0
+
+      self.is_visible = True
+
+      self.damage_effect_timer = 0
 
   
   def check_knockback(self, dt: float) -> None:
@@ -540,7 +556,7 @@ class Enemy(Entity):
     
     player.hearts -= 1
 
-    player.safety_timer += 3
+    player.safety_timer += 1.5
 
     player.heart_sprites[player.hearts].set_curr_frame(1) # Changes the sprite of the heart, to simulate losing one life
 
