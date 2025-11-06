@@ -185,11 +185,11 @@ def get_input(dt: float, win: Window, player: Player, torch: Torch) -> None:
 
       if player.last_looked_x == 'right':
         
-        player.set_curr_frame(5)
+        player.set_curr_frame(6)
       
       if player.last_looked_x == 'left':
         
-        player.set_curr_frame(8)
+        player.set_curr_frame(7)
     
     
 
@@ -199,11 +199,11 @@ def get_input(dt: float, win: Window, player: Player, torch: Torch) -> None:
 
       if player.last_looked_x == 'right':
         
-        player.set_curr_frame(6)
+        player.set_curr_frame(5)
       
       if player.last_looked_x == 'left':
         
-        player.set_curr_frame(7)
+        player.set_curr_frame(8)
     
     
 
