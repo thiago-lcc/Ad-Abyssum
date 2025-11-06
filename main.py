@@ -36,7 +36,7 @@ enemy.set_position(1000, 70)
 enemy.height -= 10
 
 spider = Spider("assets/sprites/man.png", 31)
-spider.set_position(600, 100)
+spider.set_position(700, 100)
 spider.set_curr_frame(16)
 
 torch = Torch("assets/sprites/torch.png", 14)
