@@ -22,7 +22,6 @@ background = gameimage.GameImage("assets/sprites/cave_bg_tiled.png")
 
 player = Player("assets/sprites/player_spritesheet.png", 14)
 player.set_position(140, 70)
-player.height -= 5
 player.heart_sprites[1].set_position(player.heart_sprites[0].width, 0)
 player.heart_sprites[2].set_position(player.heart_sprites[0].width * 2, 0)
 
@@ -33,7 +32,7 @@ load_level(levels, win, player, "left")
 
 enemy = Enemy("assets/sprites/enemy.png", 8)
 enemy.set_position(1000, 70)
-enemy.height -= 10
+enemy.height -= 8
 
 spider = Spider("assets/sprites/man.png", 31)
 spider.set_position(700, 100)
@@ -61,7 +60,7 @@ def main() -> None:
 
 
     kb = win.get_keyboard()
-    dt = win.delta_time() #time passed between current and last frame
+    dt = min(win.delta_time(), 0.032) #time passed between current and last frame
     get_input(dt, win, player, torch)
     
 
