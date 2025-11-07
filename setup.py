@@ -25,10 +25,17 @@ def create_blocks(blocks: list, win: Window) -> None:
    
   for block in blocks:
      
-     x,y = block
+    x,y = block
 
-     b = Block("assets/sprites/block.png")
-     b.set_position(x, y)
+    if x < 0:
+      x = win.width + x
+
+    if y < 0:
+      y = win.height + y
+
+
+    b = Block("assets/sprites/block.png")
+    b.set_position(x, y)
     
 
   for x in range(0, win.width, 70):
@@ -54,11 +61,19 @@ def create_enemies(enemies) -> None:
   pass
 
 
-def create_doors(doors: list) -> None:
+def create_doors(doors: list, win: Window) -> None:
   
   for door in doors:
 
     x,y = door[0]
+
+    if x < 0:
+      x = win.width + x
+
+    if y < 0:
+      y = win.height + y
+
+
     side = door[1]
 
     d = Door("assets/sprites/door.png", side)
@@ -73,7 +88,7 @@ def load_level(levels: dict, win: Window, player: Player, player_spawn: str) -> 
 
   create_blocks(blocks, win)
   create_enemies(enemies)
-  create_doors(doors)
+  create_doors(doors, win)
 
   for door in Door._instances:
 
