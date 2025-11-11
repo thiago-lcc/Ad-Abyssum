@@ -25,34 +25,55 @@ def create_blocks(blocks: list, win: Window) -> None:
    
   for block in blocks:
      
-    x,y = block
+    if block[1] == "single":
 
-    if x < 0:
-      x = win.width + x
+      x,y = block[0]
 
-    if y < 0:
-      y = win.height + y
+      if x < 0:
+        x = win.width + x
 
+      if y < 0:
+        y = win.height + y
+      
 
-    b = Block("assets/sprites/block.png")
-    b.set_position(x, y)
+      b = Block("assets/sprites/block.png")
+      b.set_position(x, y)
+    
+    else: 
+
+      start_x, end_x, y = block[0]
+
+      if start_x < 0:
+        start_x = win.width + start_x
+      
+      if end_x < 0:
+        end_x = win.width + end_x
+
+      if y < 0:
+        y = win.height + y
+
+      for x in range(start_x, end_x, 50):
+
+        b = Block("assets/sprites/block.png")
+        b.set_position(x, y)
+
     
 
-  for x in range(0, win.width, 70):
+  for x in range(0, win.width, 50):
      
      b_top = Block("assets/sprites/block.png")
      b_bottom = Block("assets/sprites/block.png")
 
      b_top.set_position(x, 0)
-     b_bottom.set_position(x, win.height - 70)
+     b_bottom.set_position(x, win.height - 50)
   
-  for y in range(0, win.height, 70):
+  for y in range(0, win.height, 50):
      
      b_left = Block("assets/sprites/block.png")
      b_right = Block("assets/sprites/block.png")
 
      b_left.set_position(0, y)
-     b_right.set_position(win.width - 70, y)
+     b_right.set_position(win.width - 50, y)
 
 
 
@@ -154,13 +175,13 @@ def load_flashlight(player: Player) -> None:
   
 
     # where the light "spawns" from
-    px = player.x + player.width/2 - 5
+    px = player.x + player.width/2 - 2
     py = player.y + player.height/2 - 10
 
 
 
     angle = player.last_looked  # direction the flashlight is pointing. Ex:. 0 = right, pi/2 = up, etc.
-    beam_len = 280
+    beam_len = 200
     beam_half_angle = math.radians(30)  # angle from the light coming out of the flashlight
 
 

@@ -336,7 +336,7 @@ class Player(Entity):
     super(Player, self).__init__(image_file, frames)
 
 
-    self.speed = 200
+    self.speed = 160
 
     self.hearts = 3
 
@@ -346,7 +346,7 @@ class Player(Entity):
 
     self.last_looked_x = 'right'
 
-    self.jump_strength = -400
+    self.jump_strength = -500
 
     self.is_visible = True
 
