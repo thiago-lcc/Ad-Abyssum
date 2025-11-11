@@ -102,70 +102,93 @@ class Entity(sprite.Sprite):
       self.y += self.vel_y * dt
 
 
+  def get_hitbox(self):
+
+      return (
+        self.x + self.hitbox_offset_x,
+        self.y + self.hitbox_offset_y,
+        self.x + self.hitbox_offset_x + self.hitbox_width,
+        self.y + self.hitbox_offset_y + self.hitbox_height
+    )
+  
+
+  def hitbox_collided(self, block):
+
+    left, top, right, bottom = self.get_hitbox()
+
+    b_left   = block.x
+    b_top    = block.y
+    b_right  = block.x + block.width
+    b_bottom = block.y + block.height
+
+    return not (
+        right <= b_left or
+        left >= b_right or
+        bottom <= b_top or
+        top >= b_bottom
+    )
 
 
 
-  def check_block_collisions(self) -> None:
-    
-    
-   ### must be called AFTER movement ###
 
+  def check_block_collisions(self):
 
-    # previous position fallback (first frame)
     prev_x = getattr(self, "prev_x", self.x)
     prev_y = getattr(self, "prev_y", self.y)
 
     dx = self.x - prev_x
     dy = self.y - prev_y
 
-    # Save current coords
     cur_x, cur_y = self.x, self.y
 
-    # ---------- HORIZONTAL resolution ----------
+    # Extract hitbox parameters for easy use
+    hx = self.hitbox_offset_x
+    hy = self.hitbox_offset_y
+    hw = self.hitbox_width
+    hh = self.hitbox_height
+
+    # ---------- HORIZONTAL ----------
     if dx != 0:
-      # Temporarily test horizontal movement at previous vertical position
-      self.y = prev_y
-      collided_block = None
-      for block in Block._instances:
-        if self.collided(block):
-          collided_block = block
-          break
+        self.y = prev_y
+        collided = None
 
-      if collided_block:
-        if dx > 0:
-          # moved right into block -> snap to its left
-          self.x = collided_block.x - self.width
-        else:
-          # moved left into block -> snap to its right
-          self.x = collided_block.x + collided_block.width
+        for block in Block._instances:
+            if self.hitbox_collided(block):
+                collided = block
+                break
 
-    # restore vertical position after horizontal resolution
-    # but keep the resolved self.x
+        if collided:
+            if dx > 0:
+                # align hitbox.right = block.left
+                self.x = collided.x - (hx + hw)
+            else:
+                # align hitbox.left = block.right
+                self.x = collided.x + block.width - hx
+
     self.y = cur_y
 
-    # ---------- VERTICAL resolution ----------
-    # reset grounded assumption; we'll set True if we land on something
+    # ---------- VERTICAL ----------
     self.is_grounded = False
 
     if dy != 0:
-      collided_block = None
-      for block in Block._instances:
-        if self.collided(block):
-          collided_block = block
-          break
+        collided = None
 
-      if collided_block:
-        if dy > 0:
-          # moved down -> land on top of block
-          self.y = collided_block.y - self.height
-          self.vel_y = 0
-          self.is_grounded = True
-        else:
-          # moved up -> hit head on underside
-          self.y = collided_block.y + collided_block.height
-          self.vel_y = 0
+        for block in Block._instances:
+            if self.hitbox_collided(block):
+                collided = block
+                break
 
-    # store prev position for next frame
+        if collided:
+            if dy > 0:
+                # landing
+                self.y = collided.y - (hy + hh)
+                self.vel_y = 0
+                self.is_grounded = True
+            else:
+                # head bump
+                self.y = collided.y + block.height - hy
+                self.vel_y = 0
+
     self.prev_x = self.x
     self.prev_y = self.y
 
@@ -194,6 +217,14 @@ class Torch(Entity):
     self.actual_frame = 0
     self.torch_collision = 0
     self.last_frame = 13
+
+    self.hitbox_offset_x = 0
+    
+    self.hitbox_offset_y = 0
+
+    self.hitbox_width  = self.width
+
+    self.hitbox_height = self.height
 
 
 
@@ -339,6 +370,14 @@ class Player(Entity):
 
     self.walk_channel = pygame.mixer.Channel(1)
 
+    self.hitbox_offset_x = 30
+    
+    self.hitbox_offset_y = 4
+
+    self.hitbox_width  = self.width - 60
+
+    self.hitbox_height = self.height - 8
+
 
 
 
@@ -447,6 +486,8 @@ class Player(Entity):
 
       self.damage_effect_timer = 0
 
+
+
   
   def check_knockback(self, dt: float) -> None:
 
@@ -461,6 +502,9 @@ class Player(Entity):
 
       self.knockback_timer = 0
 
+
+
+
   def animation_right(self, dt):
       
     self.counter += dt
@@ -473,6 +517,9 @@ class Player(Entity):
       
     self.set_curr_frame(self.frame_right)    
 
+
+
+
   def animation_left(self, dt):
           
     self.counter += dt
@@ -484,6 +531,9 @@ class Player(Entity):
               self.frame_left = 13
       
     self.set_curr_frame(self.frame_left) 
+
+
+
 
   
   def update(self, dt: float) -> None:
@@ -515,7 +565,7 @@ class Player(Entity):
 
 
 
-class Putris (Entity):
+class Putris(Entity):
 
   _instances = [] 
 
@@ -549,6 +599,14 @@ class Putris (Entity):
 
     self.scream_sound_channel = pygame.mixer.Channel(2)
 
+    self.hitbox_offset_x = 0
+    
+    self.hitbox_offset_y = 0
+
+    self.hitbox_width  = self.width
+
+    self.hitbox_height = self.height
+
     Putris._instances.append(self) #every object created is added to the _instances list
 
 
@@ -567,7 +625,7 @@ class Putris (Entity):
     player.knockback_direction = self.direction
 
 
-  def animation(self, dt: float, player: Player):
+  def enemy_animation(self, dt: float, player: Player):
     self.time_counter += dt
         
     if self.direction == -1:
@@ -638,7 +696,7 @@ class Putris (Entity):
       enemy.update(dt, player)
       enemy.fall(dt)
       enemy.check_block_collisions()
-      enemy.animation(dt, player)
+      enemy.enemy_animation(dt, player)
       enemy.draw()
 
 
@@ -703,17 +761,26 @@ class Spider(Entity):
     _instances = []  
     
     def __init__(self, image_file, frames=1):
-        super(Spider, self).__init__(image_file, frames)
+      super(Spider, self).__init__(image_file, frames)
         
-        self.position = 'ceil'
+      self.position = 'ceil'
         
-        self.counter = 0.0
+      self.counter = 0.0
         
-        self.on_ceil = False
+      self.on_ceil = False
         
-        self.speed = 300.0
+      self.speed = 300.0
+
+      self.hitbox_offset_x = 0
+    
+      self.hitbox_offset_y = 0
+
+      self.hitbox_width  = self.width
+
+      self.hitbox_height = self.height
+
         
-        Spider._instances.append(self)
+      Spider._instances.append(self)
       
     def change_position(self, player: Player):
 

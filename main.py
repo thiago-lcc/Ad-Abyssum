@@ -6,9 +6,8 @@ import pygame
 
 
 
-win = window.Window(0,0)
+win = window.Window(1440,810)
 win.set_title("Ad Abyssum")
-win.set_fullscreen()
 win.get_mouse().hide()
 win.mode = "game"
 win.level = 1
@@ -29,14 +28,6 @@ player.heart_sprites[2].set_position(player.heart_sprites[0].width * 2, 0)
 levels = levels = {int(key): value for key, value in read_json("assets/test.json").items()}
 load_level(levels, win, player, "left")
 
-
-enemy = Putris("assets/sprites/enemy.png", 8)
-enemy.set_position(1000, 70)
-enemy.height -= 8
-
-spider = Spider("assets/sprites/spider.png", 31)
-spider.set_position(700, 100)
-spider.set_curr_frame(16)
 
 torch = Torch("assets/sprites/torch.png", 14)
 torch.set_position(player.x, player.y)
