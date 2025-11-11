@@ -1,6 +1,6 @@
 import pygame
 import math
-from classes import Player, Torch, Block, Enemy, Door
+from classes import Player, Torch, Block, Putris, Door, Spider
 from pplay.window import Window
 from pplay.gameimage import GameImage
 import json
@@ -57,8 +57,31 @@ def create_blocks(blocks: list, win: Window) -> None:
 
 
 
-def create_enemies(enemies) -> None:
-  pass
+def create_enemies(enemies: list, win: Window) -> None:
+  
+  for enemy in enemies:
+
+    x,y = enemy[0]
+
+    if x < 0:
+      x = win.width + x
+
+    if y < 0:
+      y = win.height + y
+
+
+    if enemy[1] == "putris":
+
+      e = Putris("assets/sprites/enemy.png", 8)
+    
+    else:
+
+      e = Spider("assets/sprites/spider.png", 31)
+
+
+    e.set_position(x,y)
+
+
 
 
 def create_doors(doors: list, win: Window) -> None:
@@ -80,6 +103,8 @@ def create_doors(doors: list, win: Window) -> None:
     d.set_position(x,y)
 
 
+
+
 def load_level(levels: dict, win: Window, player: Player, player_spawn: str) -> None:
 
   blocks = levels[win.level]["blocks"]
@@ -87,7 +112,7 @@ def load_level(levels: dict, win: Window, player: Player, player_spawn: str) -> 
   doors = levels[win.level]["doors"]
 
   create_blocks(blocks, win)
-  create_enemies(enemies)
+  create_enemies(enemies, win)
   create_doors(doors, win)
 
   for door in Door._instances:
@@ -102,7 +127,8 @@ def load_level(levels: dict, win: Window, player: Player, player_spawn: str) -> 
 def change_levels(levels: dict, win: Window, door_side: str, player: Player) -> None:
   
   Door._instances.clear()
-  Enemy._instances.clear()
+  Putris._instances.clear()
+  Spider._instances.clear()
   Block._instances.clear()
 
   player_spawn = ""

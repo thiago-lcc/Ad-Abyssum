@@ -199,13 +199,13 @@ class Torch(Entity):
 
   def check_hits(self, win: window.Window) -> None:
 
-    for enemy in Enemy._instances[:]:
+    for enemy in Putris._instances[:]:
 
       if self.collided(enemy) and not self.hit_target:
 
         self.speed_x = 0
         self.hit_target = True
-        Enemy._instances.remove(enemy)
+        Putris._instances.remove(enemy)
         enemy.scream_sound_channel.play(monster_scream_sound)
       
     for block in Block._instances:
@@ -515,7 +515,7 @@ class Player(Entity):
 
 
 
-class Enemy(Entity):
+class Putris (Entity):
 
   _instances = [] 
 
@@ -524,7 +524,7 @@ class Enemy(Entity):
   def __init__(self, image_file, frames=1):
 
 
-    super(Enemy, self).__init__(image_file, frames)
+    super(Putris, self).__init__(image_file, frames)
 
 
     self.actual_frame_right = 0
@@ -549,7 +549,7 @@ class Enemy(Entity):
 
     self.scream_sound_channel = pygame.mixer.Channel(2)
 
-    Enemy._instances.append(self) #every object created is added to the _instances list
+    Putris._instances.append(self) #every object created is added to the _instances list
 
 
 
@@ -567,7 +567,7 @@ class Enemy(Entity):
     player.knockback_direction = self.direction
 
 
-  def enemy_animation(self, dt: float, player: Player):
+  def animation(self, dt: float, player: Player):
     self.time_counter += dt
         
     if self.direction == -1:
@@ -638,7 +638,7 @@ class Enemy(Entity):
       enemy.update(dt, player)
       enemy.fall(dt)
       enemy.check_block_collisions()
-      enemy.enemy_animation(dt, player)
+      enemy.animation(dt, player)
       enemy.draw()
 
 
@@ -766,7 +766,7 @@ class Spider(Entity):
       
         
     @classmethod
-    def update_spider(cls, dt, player, win):
+    def update_all(cls, dt, player, win):
         
         for spider in cls._instances:
             spider.change_position(player)

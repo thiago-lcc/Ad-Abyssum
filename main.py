@@ -1,5 +1,5 @@
 from pplay import window, sprite, gameimage
-from classes import Player, Enemy, Torch, Block, Menu_Button, Door, Spider
+from classes import Player, Putris, Torch, Block, Menu_Button, Door, Spider
 from setup import darkness_setup, get_input, create_blocks, read_json, change_levels, load_level
 import pygame
 
@@ -30,11 +30,11 @@ levels = levels = {int(key): value for key, value in read_json("assets/test.json
 load_level(levels, win, player, "left")
 
 
-enemy = Enemy("assets/sprites/enemy.png", 8)
+enemy = Putris("assets/sprites/enemy.png", 8)
 enemy.set_position(1000, 70)
 enemy.height -= 8
 
-spider = Spider("assets/sprites/man.png", 31)
+spider = Spider("assets/sprites/spider.png", 31)
 spider.set_position(700, 100)
 spider.set_curr_frame(16)
 
@@ -72,9 +72,9 @@ def main() -> None:
 
     Block.draw_all()
 
-    Spider.update_spider(dt, player, win)
+    Spider.update_all(dt, player, win)
 
-    Enemy.update_all(dt, player)
+    Putris.update_all(dt, player)
 
 
 
