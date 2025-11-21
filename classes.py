@@ -755,8 +755,6 @@ class Door(sprite.Sprite):
 
 
 
-
-
 class Spider(Entity):
     _instances = []  
     
@@ -779,6 +777,13 @@ class Spider(Entity):
 
       self.hitbox_height = self.height
 
+      self.timer_counter = 0
+      
+      self.timer_frame = 0.1
+      
+      self.first_right = 16
+      
+      self.last_right = 22
         
       Spider._instances.append(self)
       
@@ -824,13 +829,25 @@ class Spider(Entity):
       player.heart_sprites[player.hearts].set_curr_frame(1) 
 
 
-    
     def update(self, player):
       
       if self.collided(player) and player.safety_timer == 0:
             
         self.hit_player(player)
-      
+    
+    def animation_spy(self, dt):
+        if self.position == 'ground':
+
+          self.timer_counter += dt
+
+          if self.timer_counter >= self.timer_frame:
+            self.timer_counter = 0
+            self.first_right += 1
+
+            if self.first_right > self.last_right:
+                self.first_right = 16
+
+        self.set_curr_frame(self.first_right)  
         
     @classmethod
     def update_all(cls, dt, player, win):
@@ -841,7 +858,7 @@ class Spider(Entity):
             spider.falling(dt, player)
             spider.back(dt, player, win)
             spider.update(player)
-            
+            spider.animation_spy(dt)
             spider.draw()
 
 

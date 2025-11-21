@@ -4,6 +4,7 @@ from classes import Player, Torch, Block, Putris, Door, Spider
 from pplay.window import Window
 from pplay.gameimage import GameImage
 import json
+from pplay import gameimage
 
 darkness = pygame.Surface((3000, 3000), pygame.SRCALPHA)
 
@@ -306,6 +307,31 @@ def get_input(dt: float, win: Window, player: Player, torch: Torch) -> None:
         ms.unhide()
         win.mode = "menu"
 
+def restart(win):
+    Putris._instances.clear()
+    Block._instances.clear()
+    Door._instances.clear()
+    Spider._instances.clear()
+
+    player = Player("assets/sprites/player_spritesheet.png", 14)
+    player.set_position(140, 70)
+    player.heart_sprites[1].set_position(player.heart_sprites[0].width, 0)
+    player.heart_sprites[2].set_position(player.heart_sprites[0].width * 2, 0)
+
+    torch = Torch("assets/sprites/torch.png", 14)
+    torch.set_position(player.x, player.y)
+
+    levels = {int(key): value for key, value in read_json("assets/test.json").items()}
+
+    win.level = 1
+    win.door_cooldown = 0
+
+    load_level(levels, win, player, "left")
+
+    return player, torch
+
+
+    
 
 
   

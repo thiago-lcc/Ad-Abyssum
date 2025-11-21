@@ -1,6 +1,6 @@
 from pplay import window, sprite, gameimage
 from classes import Player, Putris, Torch, Block, Menu_Button, Door, Spider
-from setup import darkness_setup, get_input, create_blocks, read_json, change_levels, load_level
+from setup import darkness_setup, get_input, create_blocks, read_json, change_levels, load_level, restart
 import pygame
 
 
@@ -48,7 +48,7 @@ background_music.set_volume(0.4)
 
 def main() -> None:
 
-
+    global player, torch, levels, background
 
     kb = win.get_keyboard()
     dt = min(win.delta_time(), 0.032) #time passed between current and last frame
@@ -61,18 +61,25 @@ def main() -> None:
     
     change_level = door_side = Door.update_all(player, kb, dt, win)
 
-    Block.draw_all()
+    
 
     Spider.update_all(dt, player, win)
 
     Putris.update_all(dt, player)
 
-
+    Block.draw_all()
 
     if bool(change_level):
        
        change_levels(levels, win, door_side, player)
        
+       if torch.x != player.x and torch.y != player.y:
+          torch.set_position(player.x, player.y)   
+       
+    if player.hearts <= 0:
+          
+       if kb.key_pressed("ENTER"):
+        player, torch = restart(win)
 
 
 
@@ -82,10 +89,10 @@ def main() -> None:
     player.update(dt)
 
     
- 
+    
     torch.update(dt, win, player)
 
-
+    
 
 
 
