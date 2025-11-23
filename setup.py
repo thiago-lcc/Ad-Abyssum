@@ -1,6 +1,6 @@
 import pygame
 import math
-from classes import Player, Torch, Block, Putris, Door, Spider
+from classes import Player, Torch, Block, Putris, Door, Spider, Death
 from pplay.window import Window
 from pplay.gameimage import GameImage
 import json
@@ -327,11 +327,19 @@ def restart(win):
     win.door_cooldown = 0
 
     load_level(levels, win, player, "left")
-
+    
+    
     return player, torch
 
-
+def check_restart(kb, player, torch, win):
     
+    if kb.key_pressed("ENTER"):
+      player, torch = restart(win)
+      return player, torch, False
+       
+    else:      
+      Death.draw_game_over()
+      return player, torch, True
 
 
   

@@ -17,8 +17,6 @@ monster_scream_sound.set_volume(0.3)
 
 
 
-
-
 class Menu_Button(sprite.Sprite):
 
 
@@ -46,7 +44,25 @@ class Menu_Button(sprite.Sprite):
 
       button.draw()
 
+class Death(sprite.Sprite):
+  
+  _instances = []
 
+  def __init__(self, image_file, frames=1):
+
+
+    super(Death, self).__init__(image_file, frames)
+
+    self.played_music = False
+    
+    Death._instances.append(self)
+    
+  @classmethod
+  def draw_game_over(cls) -> None:
+
+    for image in cls._instances:
+
+      image.draw()   
 
 
 
@@ -613,16 +629,16 @@ class Putris(Entity):
 
 
   def hit_player(self, player: Player) -> None:
-    
-    player.hearts -= 1
+    if player.hearts > 0:
+      player.hearts -= 1
 
-    player.safety_timer += 1.5
+      player.safety_timer += 1.5
 
-    player.heart_sprites[player.hearts].set_curr_frame(1) # Changes the sprite of the heart, to simulate losing one life
+      player.heart_sprites[player.hearts].set_curr_frame(1) # Changes the sprite of the heart, to simulate losing one life
 
-    player.knockback_timer = 0.5
+      player.knockback_timer = 0.5
 
-    player.knockback_direction = self.direction
+      player.knockback_direction = self.direction
 
 
   def enemy_animation(self, dt: float, player: Player):

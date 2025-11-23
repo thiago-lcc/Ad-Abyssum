@@ -1,6 +1,6 @@
 from pplay import window, sprite, gameimage
-from classes import Player, Putris, Torch, Block, Menu_Button, Door, Spider
-from setup import darkness_setup, get_input, create_blocks, read_json, change_levels, load_level, restart
+from classes import Player, Putris, Torch, Block, Menu_Button, Door, Spider, Death
+from setup import darkness_setup, get_input, create_blocks, read_json, change_levels, load_level, check_restart
 import pygame
 
 
@@ -36,6 +36,9 @@ torch.set_position(player.x, player.y)
 resume = Menu_Button("assets/sprites/resume.png")
 exit = Menu_Button("assets/sprites/exit.png")
 
+death = Death("assets/sprites/Die.png")
+
+
 resume.set_position(win.width/2 - resume.width/2, win.height/2 - resume.height/2 - 200)
 exit.set_position(win.width/2 - resume.width/2, win.height/2 - resume.height/2 + 200)
 
@@ -44,6 +47,8 @@ pygame.mixer.init()
 background_music = pygame.mixer.Sound("assets/sounds/background_music.mp3")
 background_music.set_volume(0.4)
 
+game_over_sound = pygame.mixer.Sound("assets/sounds/game_over_sound.mp3")
+game_over_sound.set_volume(0.1)
 
 
 def main() -> None:
@@ -75,11 +80,6 @@ def main() -> None:
        
        if torch.x != player.x and torch.y != player.y:
           torch.set_position(player.x, player.y)   
-       
-    if player.hearts <= 0:
-          
-       if kb.key_pressed("ENTER"):
-        player, torch = restart(win)
 
 
 
@@ -92,7 +92,14 @@ def main() -> None:
     
     torch.update(dt, win, player)
 
-    
+           
+    if player.hearts <= 0:
+      
+      if (not(death.played_music)):     
+         game_over_sound.play()
+         death.played_music = True
+         
+      player, torch, death.played_music = check_restart(kb, player, torch, win)
 
 
 
