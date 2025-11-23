@@ -40,7 +40,7 @@ def create_blocks(blocks: list, win: Window) -> None:
       b = Block("assets/sprites/block.png")
       b.set_position(x, y)
     
-    else: 
+    elif block[1] == "row": 
 
       start_x, end_x, y = block[0]
 
@@ -57,6 +57,25 @@ def create_blocks(blocks: list, win: Window) -> None:
 
         b = Block("assets/sprites/block.png")
         b.set_position(x, y)
+    
+    elif block[1] == "column":
+
+      x, start_y, end_y = block[0]
+
+      if start_y < 0:
+        start_y = win.width + start_y
+      
+      if end_y < 0:
+        end_y = win.width + end_y
+
+      if x < 0:
+        x = win.height + x
+
+      for y in range(start_y, end_y, 50):
+
+        b = Block("assets/sprites/block.png")
+        b.set_position(x, y)
+      
 
     
 
