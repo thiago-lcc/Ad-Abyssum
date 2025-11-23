@@ -321,12 +321,11 @@ def restart(win):
     torch = Torch("assets/sprites/torch.png", 14)
     torch.set_position(player.x, player.y)
 
-    levels = {int(key): value for key, value in read_json("assets/test.json").items()}
-
+    win.levels = {int(key): value for key, value in read_json("assets/test.json").items()}
     win.level = 1
     win.door_cooldown = 0
 
-    load_level(levels, win, player, "left")
+    load_level(win.levels, win, player, "left")
     
     
     return player, torch

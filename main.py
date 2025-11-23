@@ -12,7 +12,7 @@ win.get_mouse().hide()
 win.mode = "game"
 win.level = 1
 win.door_cooldown = 0
-
+win.levels = {int(key): value for key, value in read_json("assets/test.json").items()}
 
 
 background = gameimage.GameImage("assets/sprites/cave_bg_tiled.png")
@@ -25,8 +25,7 @@ player.heart_sprites[1].set_position(player.heart_sprites[0].width, 0)
 player.heart_sprites[2].set_position(player.heart_sprites[0].width * 2, 0)
 
 
-levels = levels = {int(key): value for key, value in read_json("assets/test.json").items()}
-load_level(levels, win, player, "left")
+load_level(win.levels, win, player, "left")
 
 
 torch = Torch("assets/sprites/torch.png", 14)
@@ -76,7 +75,7 @@ def main() -> None:
 
     if bool(change_level):
        
-       change_levels(levels, win, door_side, player)
+       change_levels(win.levels, win, door_side, player)
        
        if torch.x != player.x and torch.y != player.y:
           torch.set_position(player.x, player.y)   
