@@ -85,7 +85,7 @@ def main() -> None:
     darkness_setup(win, player, torch)
     
 
-    player.update(dt)
+    player.update(dt, win)
 
     
     

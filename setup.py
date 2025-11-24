@@ -79,13 +79,7 @@ def create_blocks(blocks: list, win: Window) -> None:
 
     
 
-  for x in range(0, win.width, 50):
-     
-     b_top = Block("assets/sprites/block.png")
-     b_bottom = Block("assets/sprites/block.png")
 
-     b_top.set_position(x, 0)
-     b_bottom.set_position(x, win.height - 50)
   
   for y in range(0, win.height, 50):
      

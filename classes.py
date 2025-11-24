@@ -44,6 +44,10 @@ class Menu_Button(sprite.Sprite):
 
       button.draw()
 
+
+
+
+
 class Death(sprite.Sprite):
   
   _instances = []
@@ -63,6 +67,7 @@ class Death(sprite.Sprite):
     for image in cls._instances:
 
       image.draw()   
+
 
 
 
@@ -550,9 +555,21 @@ class Player(Entity):
 
 
 
+  def check_void(self, win):
+     
+    if self.y > win.height:
+
+      f = lambda: Door._instances[0] if Door._instances[0].side == "left" else Door._instances[1]
+
+      door = f()
+
+      self.set_position(door.x, door.y)
+
+      self.safety_timer += 1.5
+
 
   
-  def update(self, dt: float) -> None:
+  def update(self, dt: float, win: window.Window) -> None:
     
     self.fall(dt)
     self.check_invisibility(dt)
@@ -566,6 +583,7 @@ class Player(Entity):
     self.draw_hearts()
 
     self.check_block_collisions()
+    self.check_void(win)
 
 
     # manages walking sounds
@@ -737,7 +755,7 @@ class Door(sprite.Sprite):
   def was_used(self, player: Player, kb, win: window.Window) -> bool:
 
     if self.collided(player) and kb.key_pressed("UP") and win.door_cooldown == 0:
-      win.door_cooldown+=0.2
+      win.door_cooldown+=0.7
       return True
     
     return False
