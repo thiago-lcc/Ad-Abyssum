@@ -253,7 +253,7 @@ class Torch(Entity):
 
     for enemy in Putris._instances[:]:
 
-      if self.collided(enemy) and not self.hit_target:
+      if self.collided(enemy) and not self.hit_target and self.was_thrown:
 
         self.speed_x = 0
         self.hit_target = True
