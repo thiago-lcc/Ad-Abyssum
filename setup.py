@@ -301,11 +301,13 @@ def get_input(dt: float, win: Window, player: Player, torch: Torch) -> None:
 
 
 
-    if kb.key_pressed("E") and player.is_visible:
+    if kb.key_pressed("E") and player.is_visible and player.cooldown <= 0:
       
       player.is_visible = False
 
       player.invisibilty_timer = 5
+      
+      player.cooldown = 30
     
 
 

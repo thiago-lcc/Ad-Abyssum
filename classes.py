@@ -398,6 +398,8 @@ class Player(Entity):
     self.hitbox_width  = self.width - 60
 
     self.hitbox_height = self.height - 8
+    
+    self.cooldown = 0
 
 
 
@@ -446,11 +448,12 @@ class Player(Entity):
 
 
   def check_invisibility(self, dt: float) -> None:
-
+    
 
     if self.invisibilty_timer > 0:
 
       self.invisibilty_timer -= dt
+      
 
 
     if self.invisibilty_timer < 0:
@@ -458,6 +461,16 @@ class Player(Entity):
       self.invisibilty_timer = 0
 
       self.is_visible = True
+      
+      self.cooldown = 30
+    
+    if self.cooldown > 0:
+      
+      self.cooldown -= dt  
+    
+    if self.cooldown <= 0:
+      
+      self.cooldown = 0
   
 
 
@@ -566,6 +579,8 @@ class Player(Entity):
       self.set_position(door.x, door.y)
 
       self.safety_timer += 1.5
+      
+      
 
 
   
@@ -647,7 +662,9 @@ class Putris(Entity):
 
 
   def hit_player(self, player: Player) -> None:
+    
     if player.hearts > 0:
+      
       player.hearts -= 1
 
       player.safety_timer += 1.5
