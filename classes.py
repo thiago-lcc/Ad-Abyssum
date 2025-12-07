@@ -580,6 +580,10 @@ class Player(Entity):
 
       self.safety_timer += 1.5
       
+      self.hearts -= 1
+
+      self.heart_sprites[self.hearts].set_curr_frame(1)
+      
       
 
 
@@ -648,11 +652,11 @@ class Putris(Entity):
 
     self.scream_sound_channel = pygame.mixer.Channel(2)
 
-    self.hitbox_offset_x = 0
+    self.hitbox_offset_x = 10
     
     self.hitbox_offset_y = 0
 
-    self.hitbox_width  = self.width
+    self.hitbox_width  = self.width - 10
 
     self.hitbox_height = self.height
 
