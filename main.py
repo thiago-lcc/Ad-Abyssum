@@ -1,5 +1,5 @@
 from pplay import window, sprite, gameimage
-from classes import Player, Putris, Torch, Block, Menu_Button, Door, Spider, Death
+from classes import Player, Putris, Torch, Block, Menu_Button, Door, Spider, Death, Heart
 from setup import darkness_setup, get_input, create_blocks, read_json, change_levels, load_level, check_restart
 import pygame
 
@@ -73,6 +73,8 @@ def main() -> None:
 
     Block.draw_all()
 
+    Heart.update_all(player, win.levels, win)
+
     if bool(change_level):
        
        change_levels(win.levels, win, door_side, player)
@@ -82,7 +84,7 @@ def main() -> None:
 
 
 
-   
+    darkness_setup(win, player, torch)
     
 
     player.update(dt, win)

@@ -1,6 +1,6 @@
 import pygame
 import math
-from classes import Player, Torch, Block, Putris, Door, Spider, Death
+from classes import Player, Torch, Block, Putris, Door, Spider, Death, Heart
 from pplay.window import Window
 from pplay.gameimage import GameImage
 import json
@@ -139,6 +139,22 @@ def create_doors(doors: list, win: Window) -> None:
 
 
 
+def create_heart(heart:list, win: Window) -> None:
+
+  if not heart: return
+
+  x,y = heart
+
+  if x < 0:
+    x = win.width + x
+  
+  if y < 0:
+    y = win.height + y
+
+  h = Heart("assets/sprites/heart_spritesheet.png", 2)
+  h.set_position(x,y)
+
+
 
 def load_level(levels: dict, win: Window, player: Player, player_spawn: str) -> None:
 
@@ -149,6 +165,15 @@ def load_level(levels: dict, win: Window, player: Player, player_spawn: str) -> 
   create_blocks(blocks, win)
   create_enemies(enemies, win)
   create_doors(doors, win)
+
+  try: 
+    heart = levels[win.level]["heart"]
+    create_heart(heart, win)
+  except KeyError: pass
+
+
+  
+
 
   for door in Door._instances:
 
@@ -165,6 +190,8 @@ def change_levels(levels: dict, win: Window, door_side: str, player: Player) -> 
   Putris._instances.clear()
   Spider._instances.clear()
   Block._instances.clear()
+  Heart._instances.clear()
+  
 
   player_spawn = ""
 

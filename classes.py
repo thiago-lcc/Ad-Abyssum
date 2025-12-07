@@ -918,7 +918,45 @@ class Spider(Entity):
 
 
         
-  
+class Heart(sprite.Sprite):
+    _instances = []
+
+    def __init__(self, image_file, frames=1):
+      super(Heart, self).__init__(image_file, frames)
+
+      Heart._instances.append(self)
+    
+
+    def check_if_used(self, player: Player) -> bool:
+       
+      if self.collided(player) and player.hearts < 3:
+        
+        player.heart_sprites[player.hearts].set_curr_frame(0)
+        player.hearts += 1
+        return True
+      
+      elif self.collided(player):
+
+        return True
+
+      return False
+    
+
+    @classmethod
+    def update_all(cls, player: Player, levels: dict, win: window.Window):
+       
+      for heart in Heart._instances[:]:
+         
+        heart.draw()
+
+        if heart.check_if_used(player):
+          Heart._instances.remove(heart)
+          levels[win.level]["heart"] = []
+
+      
+        
+
+    
       
 
 
