@@ -15,6 +15,9 @@ player_walk_sound.set_volume(0.3)
 monster_scream_sound = pygame.mixer.Sound("assets/sounds/monster_scream.wav")
 monster_scream_sound.set_volume(0.3)
 
+spider_sound = pygame.mixer.Sound("assets/sounds/spider_sound.mp3")
+spider_sound.set_volume(0.3)
+
 
 
 class Menu_Button(sprite.Sprite):
@@ -856,6 +859,8 @@ class Spider(Entity):
       self.first_right = 16
       
       self.last_right = 22
+
+      self.spider_sound_channel = pygame.mixer.Channel(3)
         
       Spider._instances.append(self)
       
@@ -872,6 +877,7 @@ class Spider(Entity):
             if self.counter >= 0.4:
                 
                 self.position = 'fall'
+                self.spider_sound_channel.play(spider_sound)
         else:
             self.counter = 0
 
