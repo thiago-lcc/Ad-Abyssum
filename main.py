@@ -1,6 +1,6 @@
 from pplay import window, sprite, gameimage
-from classes import Player, Putris, Torch, Block, Menu_Button, Door, Spider, Death, Heart
-from setup import darkness_setup, get_input, create_blocks, read_json, change_levels, load_level, check_restart
+from classes import Player, Putris, Torch, Block, Menu_Button, Door, Spider, Death, Heart, Start
+from setup import darkness_setup, get_input, create_blocks, read_json, change_levels, load_level, check_restart, check_start
 import pygame
 
 
@@ -10,7 +10,7 @@ win = window.Window(1440,810)
 win.set_title("Ad Abyssum")
 win.get_mouse().hide()
 win.mode = "game"
-win.level = 7
+win.level = 1
 win.door_cooldown = 0
 win.levels = {int(key): value for key, value in read_json("assets/test.json").items()}
 
@@ -36,7 +36,7 @@ resume = Menu_Button("assets/sprites/resume.png")
 exit = Menu_Button("assets/sprites/exit.png")
 
 death = Death("assets/sprites/Die.png")
-
+start = Start("assets/sprites/start_screen.png")
 
 resume.set_position(win.width/2 - resume.width/2, win.height/2 - resume.height/2 - 200)
 exit.set_position(win.width/2 - resume.width/2, win.height/2 - resume.height/2 + 200)
@@ -84,7 +84,7 @@ def main() -> None:
 
 
 
-    darkness_setup(win, player, torch)
+    
     
 
     player.update(dt, win)
@@ -102,7 +102,9 @@ def main() -> None:
          
       player, torch, death.played_music = check_restart(kb, player, torch, win)
 
-
+    if win.level == 1 and not(start.first):
+      start.first = check_start(kb, start)
+         
 
 def menu() -> None:
    

@@ -68,7 +68,24 @@ class Death(sprite.Sprite):
 
       image.draw()   
 
-
+class Start(sprite.Sprite):
+  
+  _instances = []
+  
+  def __init__(self, image_file, frames=1):
+    
+    super(Start, self).__init__(image_file, frames)    
+    
+    self.first = False
+    
+    Start._instances.append(self)
+  
+  @classmethod
+  def draw_start(cls) -> None:
+    
+    for screen in cls._instances:
+      
+      screen.draw()  
 
 
 class Block(sprite.Sprite):
@@ -844,7 +861,7 @@ class Spider(Entity):
       
     def change_position(self, player: Player):
 
-      if abs(player.x - self.x) <= 325:  
+      if abs(player.x - self.x) <= 5:  
           self.on_ceil = True
 
 
@@ -869,7 +886,7 @@ class Spider(Entity):
     
     def back(self, dt, player, win):
         
-        if self.position == 'ground':
+        if self.position == 'ground' and player.is_visible:
             self.x += 300 * dt    
             if self.x == win.width - 100:
               self.position = 'wall'      

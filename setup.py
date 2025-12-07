@@ -1,6 +1,6 @@
 import pygame
 import math
-from classes import Player, Torch, Block, Putris, Door, Spider, Death, Heart
+from classes import Player, Torch, Block, Putris, Door, Spider, Death, Heart, Start
 from pplay.window import Window
 from pplay.gameimage import GameImage
 import json
@@ -382,5 +382,13 @@ def check_restart(kb, player, torch, win):
       Death.draw_game_over()
       return player, torch, True
 
+def check_start(kb, start):
+    
+    if kb.key_pressed("ENTER"):
+      start.first = True
+      return start.first
+    else:
+      Start.draw_start()
+      return False    
 
   
