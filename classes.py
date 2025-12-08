@@ -92,6 +92,29 @@ class Start(sprite.Sprite):
       
       screen.draw()  
 
+class End(sprite.Sprite):
+  
+  _instances = []    
+  
+  def __init__(self, image_file, frames=1):
+    
+    super(End, self).__init__(image_file, frames)
+    
+    self.game_end_sound_channel = pygame.mixer.Channel(5)
+    
+    self.played_music = False
+
+    
+    End._instances.append(self)
+  
+  @classmethod
+  def draw_end_image(cls)-> None:
+
+    for end in cls._instances:
+      
+      end.draw()    
+
+
 
 class Block(sprite.Sprite):
 

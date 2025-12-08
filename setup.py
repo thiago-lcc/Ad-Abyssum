@@ -1,6 +1,6 @@
 import pygame
 import math
-from classes import Player, Torch, Block, Putris, Door, Spider, Death, Heart, Start, Moving_Block, Breaking_Block
+from classes import Player, Torch, Block, Putris, Door, Spider, Death, Heart, Start, Moving_Block, Breaking_Block, End
 from pplay.window import Window
 from pplay.gameimage import GameImage
 import json
@@ -424,7 +424,6 @@ def check_restart(kb, player, torch, win):
       return player, torch, False
        
     else:      
-      Death.draw_game_over()
       return player, torch, True
 
 def check_start(kb, start):
@@ -436,4 +435,11 @@ def check_start(kb, start):
       Start.draw_start()
       return False    
 
-  
+def end_game(kb, player, torch, win, end):
+    
+    if kb.key_pressed("ENTER"):
+        end.game_end_sound_channel.stop()
+        end.played_music = False
+        player, torch = restart(win)
+    
+    return player, torch
