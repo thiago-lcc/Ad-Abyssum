@@ -10,7 +10,7 @@ win = window.Window(1440,810)
 win.set_title("Ad Abyssum")
 win.get_mouse().hide()
 win.mode = "game"
-win.level = 8
+win.level = 9
 win.door_cooldown = 0
 win.levels = {int(key): value for key, value in read_json("assets/test.json").items()}
 
@@ -85,7 +85,7 @@ def main() -> None:
 
 
     
-    darkness_setup(win, player, torch)
+    
 
     player.update(dt, win)
 

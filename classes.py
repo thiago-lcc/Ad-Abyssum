@@ -668,7 +668,7 @@ class Putris(Entity):
 
     self.direction = 1 #1 == right, -1 == left
 
-    self.detection_radius = 400
+    self.detection_radius = 250
 
     self.scream_sound_channel = pygame.mixer.Channel(2)
 
@@ -750,13 +750,13 @@ class Putris(Entity):
       self.direction = 1
     
 
-    if self.detection_radius >= abs(self.x - player.x) and self.detection_radius >= abs(self.y - player.y) and player.is_visible:
+    if self.detection_radius >= ((self.x - player.x)**2 + (self.y - player.y)**2)**(1/2) and player.is_visible:
 
       self.move_x(self.speed * self.direction * dt)
 
 
     if self.collided(player) and player.safety_timer == 0:
-      
+
       self.hit_player(player)
 
 
