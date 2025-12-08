@@ -1,5 +1,5 @@
 from pplay import window, sprite, gameimage
-from classes import Player, Putris, Torch, Block, Menu_Button, Door, Spider, Death, Heart, Start
+from classes import Player, Putris, Torch, Block, Menu_Button, Door, Spider, Death, Heart, Start, Moving_Block, Breaking_Block
 from setup import darkness_setup, get_input, create_blocks, read_json, change_levels, load_level, check_restart, check_start
 import pygame
 
@@ -16,7 +16,6 @@ win.levels = {int(key): value for key, value in read_json("assets/test.json").it
 
 
 background = gameimage.GameImage("assets/sprites/cave_bg_tiled.png")
-
 
 
 player = Player("assets/sprites/player_spritesheet.png", 14)
@@ -75,6 +74,11 @@ def main() -> None:
 
     Heart.update_all(player, win.levels, win)
 
+    Moving_Block.update(dt, player)
+    
+    Breaking_Block.update_break(dt, player)
+
+      
     if bool(change_level):
        
        change_levels(win.levels, win, door_side, player)
@@ -84,7 +88,7 @@ def main() -> None:
 
 
 
-    
+    darkness_setup(win, player, torch)
     
 
     player.update(dt, win)
@@ -98,6 +102,7 @@ def main() -> None:
       
       if (not(death.played_music)):     
          game_over_sound.play()
+         
          death.played_music = True
          
       player, torch, death.played_music = check_restart(kb, player, torch, win)
