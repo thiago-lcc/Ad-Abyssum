@@ -10,7 +10,7 @@ win = window.Window(1440,810)
 win.set_title("Ad Abyssum")
 win.get_mouse().hide()
 win.mode = "game"
-win.level = 12
+win.level = 13
 win.door_cooldown = 0
 win.levels = {int(key): value for key, value in read_json("assets/test.json").items()}
 
@@ -86,7 +86,6 @@ def main() -> None:
 
 
 
-    darkness_setup(win, player, torch)
 
     Moving_Block.update(dt, player)
     
@@ -101,8 +100,8 @@ def main() -> None:
     if player.hearts <= 0:
       
       if (not(death.played_music)):     
-         game_over_sound.play()
          
+         death.game_over_sound_channel.play(game_over_sound)
          death.played_music = True
          
       player, torch, death.played_music = check_restart(kb, player, torch, win)

@@ -61,6 +61,8 @@ class Death(sprite.Sprite):
     super(Death, self).__init__(image_file, frames)
 
     self.played_music = False
+
+    self.game_over_sound_channel = pygame.mixer.Channel(4)
     
     Death._instances.append(self)
     
