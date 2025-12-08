@@ -10,7 +10,7 @@ win = window.Window(1440,810)
 win.set_title("Ad Abyssum")
 win.get_mouse().hide()
 win.mode = "game"
-win.level = 9
+win.level = 12
 win.door_cooldown = 0
 win.levels = {int(key): value for key, value in read_json("assets/test.json").items()}
 
@@ -73,8 +73,6 @@ def main() -> None:
     Block.draw_all()
 
     Heart.update_all(player, win.levels, win)
-
-    Moving_Block.update(dt, player)
     
     Breaking_Block.update_break(dt, player)
 
@@ -89,6 +87,8 @@ def main() -> None:
 
 
     darkness_setup(win, player, torch)
+
+    Moving_Block.update(dt, player)
     
 
     player.update(dt, win)
