@@ -1,6 +1,6 @@
 import pygame
 import math
-from classes import Player, Torch, Block, Putris, Door, Spider, Death, Heart, Start
+from classes import Player, Torch, Block, Putris, Door, Spider, Death, Heart, Start, Moving_Block, Breaking_Block
 from pplay.window import Window
 from pplay.gameimage import GameImage
 import json
@@ -155,23 +155,64 @@ def create_heart(heart:list, win: Window) -> None:
   h.set_position(x,y)
 
 
+def create_moving(moving: list, win: Window) -> None:
+      
+    for move in moving:
+        
+        x, y = move
 
+        if x < 0:
+            x = win.width + x
+        
+        if y < 0:
+            y = win.height + y
+        
+        m = Moving_Block("assets/sprites/moving_block.png")
+        m.set_position(x, y)
+
+def create_break(breaking: list, win: Window) -> None:
+    
+    for br in breaking:
+        
+        x,y = br
+        
+        if x < 0:
+            x = win.width + x
+        
+        if y < 0:
+            y = win.height + y
+        
+        brk = Breaking_Block("assets/sprites/breaking_block.png")
+        brk.set_position(x, y)
+            
+    
+      
 def load_level(levels: dict, win: Window, player: Player, player_spawn: str) -> None:
 
   blocks = levels[win.level]["blocks"]
   enemies = levels[win.level]["enemies"]
   doors = levels[win.level]["doors"]
-
+ 
+  
   create_blocks(blocks, win)
   create_enemies(enemies, win)
   create_doors(doors, win)
-
+  
+  
   try: 
     heart = levels[win.level]["heart"]
     create_heart(heart, win)
   except KeyError: pass
+  
+  try: 
+    moving = levels[win.level]["moving"]
+    create_moving(moving, win)
+  except KeyError: pass
 
-
+  try:
+    breaking = levels[win.level]["breaking"]
+    create_break(breaking, win)
+  except KeyError: pass  
   
 
 
@@ -191,8 +232,9 @@ def change_levels(levels: dict, win: Window, door_side: str, player: Player) -> 
   Spider._instances.clear()
   Block._instances.clear()
   Heart._instances.clear()
+  Moving_Block._instances.clear()
+  Breaking_Block._instances.clear()
   
-
   player_spawn = ""
 
   if door_side == "left":
@@ -334,7 +376,7 @@ def get_input(dt: float, win: Window, player: Player, torch: Torch) -> None:
 
       player.invisibilty_timer = 5
       
-      player.cooldown = 30
+      player.cooldown = 45
     
 
 
@@ -354,7 +396,9 @@ def restart(win):
     Block._instances.clear()
     Door._instances.clear()
     Spider._instances.clear()
-
+    Moving_Block._instances.clear()
+    Breaking_Block._instances.clear()
+    
     player = Player("assets/sprites/player_spritesheet.png", 14)
     player.set_position(140, 70)
     player.heart_sprites[1].set_position(player.heart_sprites[0].width, 0)
@@ -375,6 +419,7 @@ def restart(win):
 def check_restart(kb, player, torch, win):
     
     if kb.key_pressed("ENTER"):
+      
       player, torch = restart(win)
       return player, torch, False
        

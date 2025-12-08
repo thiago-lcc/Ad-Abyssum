@@ -190,7 +190,7 @@ class Entity(sprite.Sprite):
         self.y = prev_y
         collided = None
 
-        for block in Block._instances:
+        for block in Block._instances + Moving_Block._instances + Breaking_Block._instances:
             if self.hitbox_collided(block):
                 collided = block
                 break
@@ -211,7 +211,7 @@ class Entity(sprite.Sprite):
     if dy != 0:
         collided = None
 
-        for block in Block._instances:
+        for block in Block._instances + Moving_Block._instances + Breaking_Block._instances:
             if self.hitbox_collided(block):
                 collided = block
                 break
@@ -277,7 +277,7 @@ class Torch(Entity):
         Putris._instances.remove(enemy)
         enemy.scream_sound_channel.play(monster_scream_sound)
       
-    for block in Block._instances:
+    for block in Block._instances + Moving_Block._instances + Breaking_Block._instances:
 
       if self.collided(block):
 
@@ -970,8 +970,113 @@ class Heart(sprite.Sprite):
           Heart._instances.remove(heart)
           levels[win.level]["heart"] = []
 
+class Moving_Block(Entity):
       
+  _instances = []  
+    
+  def __init__(self, image_file, frames=1):
+    super(Moving_Block, self).__init__(image_file, frames)
+    
+    self.timer = 0
+    self.cool = 5
+    self.hitbox_offset_x = 0
+    self.hitbox_offset_y = 0
+    self.hitbox_width = self.width
+    self.hitbox_height = self.height
+    Moving_Block._instances.append(self)
+  
+  def moving(self, dt, player):
         
+    self.timer += dt
+
+    if self.timer <= self.cool:
+      self.x += (self.x / 10) * dt
+
+    
+    elif self.timer <= self.cool * 2:
+      self.x -= (self.x / 10) * dt
+    
+
+    else:
+      self.timer = 0
+  
+    
+    
+  @classmethod
+  def update(cls, dt, player):
+    
+    for mov in Moving_Block._instances[:]:
+      
+      mov.draw()
+      
+      mov.moving(dt, player)        
+
+class Breaking_Block(Entity):
+    
+  _instances = []
+
+  def __init__(self, image_file, frames=1):
+      super(Breaking_Block, self).__init__(image_file, frames)
+
+      self.timer = 0            
+      self.cool = 1.5           
+      self.fall_timer = 0
+      self.fall_time = 3.0       
+      self.is_falling = False
+      self.out_win = False  
+      
+      Breaking_Block._instances.append(self)
+
+  def breaking(self, dt, player):
+    
+    
+    if not self.is_falling and not self.out_win:
+
+        if self.collided(player):
+            self.timer += dt
+        else:
+            self.timer = 0
+
+       
+        if self.timer >= self.cool:
+            self.is_falling = True
+            self.fall_timer = 0
+
+
+    
+    elif self.is_falling:
+
+        self.y += 200 * dt
+        self.fall_timer += dt
+
+        
+        if self.fall_timer >= self.fall_time:
+            self.is_falling = False
+            self.out_win = True
+
+
+    
+    elif self.out_win:
+
+        self.y -= 200 * dt     
+        self.fall_timer -= dt  
+
+        if self.fall_timer <= 0:
+            self.fall_timer = 0
+            self.out_win = False
+            
+            self.timer = 0
+          
+          
+              
+  @classmethod
+  def update_break(cls, dt, player):
+    
+    for br in Breaking_Block._instances[:]:
+      
+      br.draw()
+      
+      br.breaking(dt, player)  
 
     
       
