@@ -88,7 +88,7 @@ def main() -> None:
           torch.set_position(player.x, player.y)   
 
 
-    darkness_setup(win, player, torch)
+
 
     Moving_Block.update(dt, player)
     

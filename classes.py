@@ -867,7 +867,7 @@ class Spider(Entity):
         
       self.on_ceil = False
         
-      self.speed = 300.0
+      self.speed = 500.0
 
       self.hitbox_offset_x = 0
     
