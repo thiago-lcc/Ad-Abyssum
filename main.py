@@ -20,8 +20,9 @@ background = gameimage.GameImage("assets/sprites/cave_bg_tiled.png")
 
 player = Player("assets/sprites/player_spritesheet.png", 14)
 player.set_position(140, 70)
-player.heart_sprites[1].set_position(player.heart_sprites[0].width, 0)
-player.heart_sprites[2].set_position(player.heart_sprites[0].width * 2, 0)
+player.heart_sprites[0].set_position(40,10)
+player.heart_sprites[1].set_position(player.heart_sprites[0].width + 40, 10)
+player.heart_sprites[2].set_position(player.heart_sprites[0].width * 2 + 40, 10)
 
 
 load_level(win.levels, win, player, "left")
@@ -90,7 +91,7 @@ def main() -> None:
           torch.set_position(player.x, player.y)   
 
 
-
+    darkness_setup(win, player, torch)
 
     Moving_Block.update(dt, player)
     
