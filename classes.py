@@ -888,14 +888,17 @@ class Spider(Entity):
       self.spider_sound_channel = pygame.mixer.Channel(3)
         
       Spider._instances.append(self)
+
+
       
-    def change_position(self, player: Player):
+    def change_position(self, player: Player, win):
 
-      if abs(player.x - self.x) <= 5:  
+      if abs(player.x - self.x) <= 5  and abs(self.y - player.y) < win.height*(1/2) and player.is_visible:  
           self.on_ceil = True
+      
 
 
-    def update_ceil(self, dt: float):
+    def update_ceil(self, dt: float, player: Player, win: window.Window):
         if self.position == 'ceil' and self.on_ceil:
             self.counter += dt
             
@@ -906,6 +909,8 @@ class Spider(Entity):
         else:
             self.counter = 0
 
+
+
     
     def falling(self, dt, player):
         
@@ -914,6 +919,8 @@ class Spider(Entity):
             
             if self.y >= player.y + 75:
               self.position = 'ground'
+
+
     
     def back(self, dt, player, win):
         
@@ -922,6 +929,8 @@ class Spider(Entity):
             if self.x == win.width - 100:
               self.position = 'wall'      
     
+
+
     
     def hit_player(self, player: Player) -> None:
         
@@ -932,11 +941,15 @@ class Spider(Entity):
       player.heart_sprites[player.hearts].set_curr_frame(1) 
 
 
+
+
     def update(self, player):
       
       if self.collided(player) and player.safety_timer == 0:
             
         self.hit_player(player)
+
+
     
     def animation_spy(self, dt):
         if self.position == 'ground':
@@ -951,13 +964,15 @@ class Spider(Entity):
                 self.first_right = 16
 
         self.set_curr_frame(self.first_right)  
+
+
         
     @classmethod
     def update_all(cls, dt, player, win):
         
         for spider in cls._instances:
-            spider.change_position(player)
-            spider.update_ceil(dt)
+            spider.change_position(player, win)
+            spider.update_ceil(dt, player, win)
             spider.falling(dt, player)
             spider.back(dt, player, win)
             spider.update(player)
