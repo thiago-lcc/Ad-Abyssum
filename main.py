@@ -84,6 +84,8 @@ def main() -> None:
        
        change_levels(win.levels, win, door_side, player)
        
+       player.once = True
+       
        if torch.x != player.x and torch.y != player.y:
           torch.set_position(player.x, player.y)   
 

@@ -370,7 +370,9 @@ def get_input(dt: float, win: Window, player: Player, torch: Torch) -> None:
 
 
 
-    if kb.key_pressed("E") and player.is_visible and player.cooldown <= 0:
+    if kb.key_pressed("E") and player.is_visible and player.once:
+      
+      player.once = False
       
       player.is_visible = False
 

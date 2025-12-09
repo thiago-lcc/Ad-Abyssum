@@ -446,6 +446,7 @@ class Player(Entity):
     
     self.cooldown = 0
 
+    self.once = True
 
 
 
