@@ -1066,16 +1066,15 @@ class Breaking_Block(Entity):
       super(Breaking_Block, self).__init__(image_file, frames)
 
       self.timer = 0            
-      self.cool = 1.5           
+      self.cool = 1.0           
       self.fall_timer = 0
       self.fall_time = 3.0       
       self.is_falling = False
       self.out_win = False  
-      
+      self.original = 0
       Breaking_Block._instances.append(self)
 
   def breaking(self, dt, player):
-    
     
     if not self.is_falling and not self.out_win:
 
@@ -1084,36 +1083,34 @@ class Breaking_Block(Entity):
         else:
             self.timer = 0
 
-       
         if self.timer >= self.cool:
             self.is_falling = True
             self.fall_timer = 0
+            self.original = self.y
 
-
-    
     elif self.is_falling:
 
         self.y += 200 * dt
         self.fall_timer += dt
-
         
         if self.fall_timer >= self.fall_time:
             self.is_falling = False
             self.out_win = True
+            
 
-
-    
     elif self.out_win:
 
-        self.y -= 200 * dt     
-        self.fall_timer -= dt  
-
+        self.y -= 200 * dt
+        self.fall_timer -= dt
+        
         if self.fall_timer <= 0:
             self.fall_timer = 0
             self.out_win = False
-            
             self.timer = 0
-          
+            self.y = self.original
+            
+
+            
           
               
   @classmethod
